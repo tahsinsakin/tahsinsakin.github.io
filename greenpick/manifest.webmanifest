@@ -1,0 +1,14 @@
+{
+  "name": "GreenPick",
+  "short_name": "GreenPick",
+  "description": "Çiftçiden kente, aracısız vegan pazar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14331c",
+  "theme_color": "#14331c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
