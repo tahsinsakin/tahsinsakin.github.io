@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#14331c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GreenPick" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="icon" href="./icon.svg" />
+  <title>GreenPick</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <b>GreenPick</b>
+      <small>çiftçiden kente · <span id="role-label">Alıcı</span></small>
+    </header>
+    <main>
+      <section id="screen-home" data-screen>
+        <div class="hero">
+          <div class="pills">
+            <span class="pill">%100 vegan</span>
+            <span class="pill">Farm to Fork</span>
+            <span class="pill">300 m</span>
+            <span class="pill">stopaj</span>
+          </div>
+          <h1>Köyden kente, aracısız hasat.</h1>
+          <p class="meta">iPhone’da Safari ile aç, Paylaş → Ana Ekrana Ekle. Konum ancak ödeme sonrası açılır.</p>
+        </div>
+        <div class="install">
+          Ana ekran ikonu
+          <ol>
+            <li>Alttaki Paylaş düğmesi</li>
+            <li>Ana Ekrana Ekle</li>
+            <li>Ekle</li>
+          </ol>
+        </div>
+        <div class="statgrid">
+          <button class="btn" onclick="setRole('CUSTOMER')">Alıcıyım</button>
+          <button class="btn dark" onclick="setRole('FARMER')">Çiftçiyim</button>
+        </div>
+        <div id="market-list"></div>
+      </section>
+
+      <section id="screen-map" data-screen class="hidden">
+        <h2>Yakın çiftlikler</h2>
+        <p class="meta">İğneler kaydırılmış. Tam GPS kilitli.</p>
+        <div class="mapbox"><iframe id="map-frame" title="harita" loading="lazy"></iframe></div>
+        <button class="btn" onclick="useGps()">Konumumu kullan</button>
+        <button class="btn ghost" onclick="simulateNear()">Tezgahın yanındayım (300 m)</button>
+        <button class="btn ghost" onclick="askPush()">Bildirim izni</button>
+        <div id="geo-msg"></div>
+        <div id="farm-cards"></div>
+        <h3>Bildirimler</h3>
+        <div id="notif-list"></div>
+      </section>
+
+      <section id="screen-buy" data-screen class="hidden">
+        <h2 id="buy-title">Ödeme</h2>
+        <p class="meta" id="buy-farm"></p>
+        <input type="hidden" id="buy-pid" />
+        <label>Adet</label>
+        <input id="buy-qty" type="number" min="1" value="1" oninput="quoteBuy()" />
+        <label>Tahmini mesafe (km)</label>
+        <input id="buy-km" type="number" min="0.2" step="0.1" value="6" oninput="quoteBuy()" />
+        <div id="quote-box"></div>
+        <label>Kart (son hane 3 = red)</label>
+        <input id="buy-pan" inputmode="numeric" value="4242424242424242" />
+        <button class="btn" onclick="payNow()">Öde ve tam konumu aç</button>
+        <div id="buy-msg"></div>
+      </section>
+
+      <section id="screen-farm" data-screen class="hidden">
+        <h2>Hasat yükle</h2>
+        <p class="meta">iPhone kamerası capture ile açılır.</p>
+        <img id="h-preview" class="photo hidden" alt="hasat" />
+        <label>Fotoğraf</label>
+        <input type="file" accept="image/*" capture="environment" onchange="onPhoto(this)" />
+        <label>Ürün adı</label>
+        <input id="h-name" value="Sabah hasadı çilek" />
+        <label>Açıklama</label>
+        <textarea id="h-desc">Bugün kesildi.</textarea>
+        <label>Fiyat ₺</label>
+        <input id="h-price" type="number" value="90" />
+        <label>Stok</label>
+        <input id="h-stock" type="number" value="12" />
+        <label>Kategori</label>
+        <select id="h-cat">
+          <option>Meyve</option><option>Sebze</option><option>Yeşillik</option><option>Baklagil</option>
+        </select>
+        <button class="btn" onclick="publishHarvest()">Tezgaha koy</button>
+        <div id="h-msg"></div>
+        <h3>NFC teslim</h3>
+        <label>Sipariş id</label>
+        <input id="nfc-order" placeholder="gp…" />
+        <label>NFC sır (ödeme ekranından)</label>
+        <input id="nfc-secret" />
+        <button class="btn dark" onclick="nfcTap()">Dokun ve doğrula</button>
+        <div id="nfc-msg"></div>
+      </section>
+
+      <section id="screen-more" data-screen class="hidden">
+        <h2>Siparişler ve etki</h2>
+        <div class="statgrid">
+          <div class="stat"><span>Stopaj kayıtsız</span><b>%2</b></div>
+          <div class="stat"><span>Vegan kilit</span><b>%100</b></div>
+          <div class="stat"><span>Çit</span><b>300 m</b></div>
+          <div class="stat"><span>Karbon</span><b>0.12 kg/km</b></div>
+        </div>
+        <div id="order-list"></div>
+        <button class="btn ghost" onclick="resetDemo()">Demoyu sıfırla</button>
+        <p class="meta">Tahsin Sakin · GreenPick · Belvia köküne dokunulmadı.</p>
+      </section>
+    </main>
+    <nav class="tabs">
+      <button data-go="screen-home" class="on">Pazar</button>
+      <button data-go="screen-map">Harita</button>
+      <button data-go="screen-buy">Öde</button>
+      <button data-go="screen-farm">Çiftlik</button>
+      <button data-go="screen-more">Sipariş</button>
+    </nav>
+  </div>
+  <script src="./app.js"></script>
+</body>
+</html>
