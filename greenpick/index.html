@@ -11,9 +11,9 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./styles.css?v=eu10" />
-  <title>GreenPick · European Union Farm to Fork</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="./styles.css?v=eu11" />
+  <title>GreenPick · Fresh food near you</title>
 </head>
 <body>
   <div id="grain" aria-hidden="true"></div>
@@ -21,259 +21,204 @@
     <header class="mast">
       <div class="mast-sky" aria-hidden="true"></div>
       <div class="mast-plate">
-        <div class="mast-brand">
-          <div class="mast-mark" aria-hidden="true">
-            <svg viewBox="0 0 120 80" class="flag" role="img">
-              <rect width="120" height="80" fill="#003399"/>
-              <g fill="#FFCC00" transform="translate(60 40)">
-                <g id="st"><polygon points="0,-11 3.1,-3.4 11,-3.4 4.7,1.3 7.1,9.1 0,4.2 -7.1,9.1 -4.7,1.3 -11,-3.4 -3.1,-3.4"/></g>
-                <use href="#st" transform="rotate(30)"/><use href="#st" transform="rotate(60)"/>
-                <use href="#st" transform="rotate(90)"/><use href="#st" transform="rotate(120)"/>
-                <use href="#st" transform="rotate(150)"/><use href="#st" transform="rotate(180)"/>
-                <use href="#st" transform="rotate(210)"/><use href="#st" transform="rotate(240)"/>
-                <use href="#st" transform="rotate(270)"/><use href="#st" transform="rotate(300)"/>
-                <use href="#st" transform="rotate(330)"/>
-              </g>
-            </svg>
-          </div>
-          <div class="mast-copy">
-            <p class="mast-kicker">European Union</p>
-            <h1>GreenPick</h1>
-            <p class="mast-sub">Farm to Fork dossier</p>
-          </div>
+        <div class="mast-copy">
+          <p class="mast-kicker">GreenPick</p>
+          <h1 id="mast-title">Fresh food near you</h1>
         </div>
         <p class="mast-role"><span id="role-label">Buyer</span></p>
       </div>
-      <p class="mast-meta">
-        <span>Farm to Fork Strategy</span>
-        <span class="sep" aria-hidden="true">·</span>
-        <span>DG Agriculture</span>
-        <span class="sep" aria-hidden="true">·</span>
-        <span>COM(2020) 381 final</span>
-      </p>
     </header>
-
+    <div id="gate" class="gate hidden" role="dialog" aria-labelledby="gate-title">
+      <div class="gate-card" id="gate-step"></div>
+    </div>
     <div class="pager" id="pager">
       <section class="page" id="screen-home">
-        <figure class="hero">
-          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Holding at sunrise" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=60'" />
-          <figcaption class="cap">Holding at first light</figcaption>
-        </figure>
-
-        <p class="kicker">Official Journal · Market</p>
-        <h2>Harvest stall</h2>
-        <p class="lede">Exact GPS unlocks after payment. Lots carry a Farm to Fork, organic, or short-supply-chain mark.</p>
-        <div class="cite">Reg. (EU) 2018/848 · COM(2020) 381 final · European Green Deal</div>
-
-        <div class="pills">
-          <span class="pill gold">EU organic</span>
-          <span class="pill">100% vegan</span>
-          <span class="pill">300 m fence</span>
-          <span class="pill">Euro till</span>
+        <p class="plain" id="home-intro">Local farmers list what they have ready today. You can see it, buy it, and collect it nearby.</p>
+        <div id="vegan-banner" class="hidden banner">Plant-based food near you</div>
+        <div id="hero-lot"></div>
+        <button type="button" class="btn mega" data-act="near-scan">What is fresh near me?</button>
+        <h3>More nearby</h3>
+        <div id="near-list" class="stack"></div>
+        <div class="alert-box">
+          <p class="alert-title">Nearby harvest alerts</p>
+          <p class="plain tight">We can tell you when a farmer nearby lists food.</p>
+          <label for="radius-sel">Look within</label>
+          <select id="radius-sel">
+            <option value="500">500 m</option>
+            <option value="1000" selected>1 km</option>
+            <option value="3000">3 km</option>
+            <option value="5000">5 km</option>
+            <option value="10000">10 km</option>
+          </select>
+          <button type="button" class="btn" data-act="push">Turn on alerts</button>
+          <div id="alert-msg"></div>
         </div>
-        <div class="split">
-          <button type="button" class="btn" data-act="role" data-role="CUSTOMER" id="role-c">I am a buyer</button>
-          <button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">I am a grower</button>
+        <div class="why">
+          <h3>Why this works</h3>
+          <ul class="why-list">
+            <li>Shorter food chain</li>
+            <li>Faster from harvest to table</li>
+            <li>Less unnecessary transport</li>
+            <li>Buy directly from the farmer</li>
+          </ul>
+          <button type="button" class="btn ghost" data-act="go" data-go="screen-more">How the food chain works</button>
         </div>
-        <p class="hint">Safari → Share → Add to Home Screen</p>
-
-        <div class="seals">
-          <div class="seal">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#003399"/><circle cx="32" cy="32" r="22" fill="none" stroke="#FFCC00" stroke-width="1.6"/><text x="32" y="28" text-anchor="middle" fill="#FFCC00" font-size="8" font-family="Source Sans 3,sans-serif">EU</text><text x="32" y="39" text-anchor="middle" fill="#F4EFE4" font-size="6" font-family="Source Sans 3,sans-serif">F2F</text></svg>
-            <span>Farm to Fork</span>
-          </div>
-          <div class="seal">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#1B7A4E"/><path d="M32 16c14 9 22 24 18 36-9-3-16-11-18-20-2 9-9 17-18 20-4-12 4-27 18-36z" fill="#FFCC00"/></svg>
-            <span>Organic 2018/848</span>
-          </div>
-          <div class="seal">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#0B1C33"/><text x="32" y="28" text-anchor="middle" fill="#FFCC00" font-size="8" font-family="Source Sans 3,sans-serif">EU</text><text x="32" y="39" text-anchor="middle" fill="#F4EFE4" font-size="6" font-family="Source Sans 3,sans-serif">GD</text></svg>
-            <span>Green Deal</span>
-          </div>
+        <div class="eu-strip">
+          <p class="kicker">European food system · references</p>
+          <button type="button" class="linkrow" data-act="go" data-go="screen-more">Farm to Fork Strategy</button>
+          <button type="button" class="linkrow" data-act="go" data-go="screen-more">EU Organic Regulation 2018/848</button>
+          <button type="button" class="linkrow" data-act="go" data-go="screen-more">European Green Deal</button>
+          <button type="button" class="linkrow" data-act="go" data-go="screen-more">Potential European funding pathways</button>
         </div>
-
-        <h3>Today’s stall</h3>
-        <div id="market-list" class="stack"></div>
       </section>
-
       <section class="page" id="screen-map">
-        <figure class="hero">
-          <img src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1200" width="1200" height="675" alt="Wheat holding" />
-          <figcaption class="cap">Holdings · pins stay offset until the till</figcaption>
-        </figure>
-        <p class="kicker">Map</p>
-        <h2>Nearby holdings</h2>
-        <p class="lede">Full GPS stays locked. A 300 m fence can notify you of a ready lot.</p>
-        <div class="cite">Geofence 300 m · jittered public pin · exact address after settlement</div>
-        <div class="mapbox"><iframe id="map-frame" title="map" loading="lazy"></iframe></div>
+        <h2>Live local food map</h2>
+        <p class="plain">Pins stay slightly offset until you pay. Exact farm address opens on the receipt.</p>
+        <div class="mapbox"><iframe id="map-frame" title="Map of nearby farms" loading="lazy"></iframe></div>
         <button type="button" class="btn" data-act="gps">Use my location</button>
-        <button type="button" class="btn ghost" data-act="near">I am at the stall</button>
-        <button type="button" class="btn ghost" data-act="push">Allow notifications</button>
+        <button type="button" class="btn ghost" data-act="near">I am at a stall</button>
         <div id="geo-msg"></div>
-        <h3>Holdings</h3>
+        <h3>Farms and harvests</h3>
         <div id="farm-cards" class="stack"></div>
-        <h3>Notices</h3>
+        <h3>Alerts</h3>
         <div id="notif-list" class="stack"></div>
       </section>
-
       <section class="page" id="screen-buy">
+        <button type="button" class="btn ghost back" data-act="go" data-go="screen-home">Back to food near you</button>
         <figure class="hero" id="buy-hero-wrap">
-          <img id="buy-hero" src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Lot photograph" />
-          <figcaption class="cap" id="buy-cap">Till · location sealed until the receipt</figcaption>
+          <img id="buy-hero" src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Lot photograph" />
+          <figcaption class="cap" id="buy-cap">Pay to unlock the exact farm location</figcaption>
         </figure>
-        <p class="kicker">Till</p>
-        <h2 id="buy-title">Settlement</h2>
-        <p class="lede" id="buy-farm">Choose a lot at the stall. Location does not open until the receipt is cut.</p>
+        <p class="kicker">Buy</p>
+        <h2 id="buy-title">Choose a harvest first</h2>
+        <p class="plain" id="buy-farm">Pick food on the home screen. The farm address stays closed until you pay.</p>
         <input type="hidden" id="buy-pid" />
         <div id="buy-form" class="hidden">
-          <label for="buy-qty">Quantity</label>
+          <label for="buy-qty">How much (kg)</label>
           <input id="buy-qty" type="number" min="1" value="1" inputmode="numeric" />
-          <label for="buy-km">Distance km</label>
-          <input id="buy-km" type="number" min="0.2" step="0.1" value="6" inputmode="decimal" />
+          <label for="buy-km">Your travel in km</label>
+          <input id="buy-km" type="number" min="0.2" step="0.1" value="0.3" inputmode="decimal" />
           <div id="quote-box"></div>
-          <label for="buy-pan">Card · last digit 3 is declined</label>
+          <label for="buy-pan">Card number · last digit 3 is declined</label>
           <input id="buy-pan" inputmode="numeric" value="4242424242424242" autocomplete="off" />
-          <button type="button" class="btn" data-act="pay">Pay and unlock location</button>
+          <button type="button" class="btn" data-act="pay">Pay and show farm location</button>
         </div>
-        <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">Return to stall</button>
+        <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">See food near you</button>
         <div id="buy-msg"></div>
       </section>
-
       <section class="page" id="screen-farm">
-        <figure class="hero">
-          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Holding desk" />
-          <figcaption class="cap">Holding desk · camera plate + NFC secret</figcaption>
-        </figure>
-        <p class="kicker">Holding</p>
-        <h2>Lodge a harvest</h2>
-        <p class="lede">Photograph the crate. Handover closes with an EU traceability slip and NFC secret.</p>
-        <img id="h-preview" class="photo hidden" alt="harvest" />
-        <label>Photograph</label>
-        <input id="h-file" type="file" accept="image/*" capture="environment" />
-        <label for="h-name">Lot name</label>
-        <input id="h-name" value="Morning-picked strawberries" />
-        <label for="h-desc">Description</label>
-        <textarea id="h-desc">Cut today. No cold chain.</textarea>
-        <div class="split">
-          <div>
-            <label for="h-price">Price €</label>
-            <input id="h-price" type="number" value="9" inputmode="decimal" />
-          </div>
-          <div>
-            <label for="h-stock">Stock</label>
-            <input id="h-stock" type="number" value="12" inputmode="numeric" />
-          </div>
+        <h2>List today's harvest</h2>
+        <p class="plain">Take a photo. Say what you have, how much, and the price. That is enough.</p>
+        <div class="toggles">
+          <button type="button" class="btn ghost" data-act="role" data-role="CUSTOMER" id="role-c">I am buying</button>
+          <button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">I am a farmer</button>
         </div>
-        <label for="h-cat">Category</label>
+        <img id="h-preview" class="photo hidden" alt="Harvest photograph" />
+        <label for="h-file">Photograph</label>
+        <input id="h-file" type="file" accept="image/*" capture="environment" />
+        <label for="h-name">What do you have?</label>
+        <input id="h-name" value="Strawberries" />
+        <label for="h-stock">How much (kg)</label>
+        <input id="h-stock" type="number" value="3" inputmode="numeric" />
+        <label for="h-price">Price euro / kg</label>
+        <input id="h-price" type="number" value="9" inputmode="decimal" />
+        <label for="h-when">When was it harvested?</label>
+        <input id="h-when" value="Today, 09:15" />
+        <label for="h-eu">Is it officially organic?</label>
+        <select id="h-eu">
+          <option value="organic">Yes · EU Organic Certified (2018/848)</option>
+          <option value="conv">In conversion</option>
+          <option value="none">Not EU Organic Certified</option>
+        </select>
+        <label for="h-cat">Kind of food</label>
         <select id="h-cat">
           <option>Fruit</option>
           <option>Vegetable</option>
           <option>Greens</option>
           <option>Pulses</option>
+          <option>Grains</option>
+          <option>Dairy</option>
+          <option>Eggs</option>
+          <option>Honey</option>
+          <option>Meat</option>
         </select>
-        <label for="h-eu">EU mark</label>
-        <select id="h-eu">
-          <option value="organic">EU organic (2018/848)</option>
-          <option value="f2f">Farm to Fork</option>
-          <option value="local">Short food supply chain</option>
-        </select>
-        <button type="button" class="btn" data-act="publish">Place on stall</button>
+        <label for="h-desc">Short note (optional)</label>
+        <textarea id="h-desc">Picked this morning. No cold store.</textarea>
+        <button type="button" class="btn" data-act="publish">Publish harvest</button>
         <div id="h-msg"></div>
-        <h3>NFC handover</h3>
+        <h3>Hand over the order</h3>
         <label for="nfc-order">Order id</label>
         <input id="nfc-order" placeholder="gp…" />
-        <label for="nfc-secret">NFC secret</label>
+        <label for="nfc-secret">Handover code</label>
         <input id="nfc-secret" />
         <button type="button" class="btn ghost" data-act="nfc">Tap and verify</button>
         <div id="nfc-msg"></div>
       </section>
-
       <section class="page" id="screen-more">
-        <p class="kicker">Dossier</p>
-        <figure class="flagplate" aria-label="Flag of the European Union">
-          <svg viewBox="0 0 120 80" class="flag-lg">
-            <rect width="120" height="80" fill="#003399"/>
-            <g fill="#FFCC00" transform="translate(60 40)">
-              <g id="st3"><polygon points="0,-11 3.1,-3.4 11,-3.4 4.7,1.3 7.1,9.1 0,4.2 -7.1,9.1 -4.7,1.3 -11,-3.4 -3.1,-3.4"/></g>
-              <use href="#st3" transform="rotate(30)"/><use href="#st3" transform="rotate(60)"/>
-              <use href="#st3" transform="rotate(90)"/><use href="#st3" transform="rotate(120)"/>
-              <use href="#st3" transform="rotate(150)"/><use href="#st3" transform="rotate(180)"/>
-              <use href="#st3" transform="rotate(210)"/><use href="#st3" transform="rotate(240)"/>
-              <use href="#st3" transform="rotate(270)"/><use href="#st3" transform="rotate(300)"/>
-              <use href="#st3" transform="rotate(330)"/>
-            </g>
-          </svg>
-          <figcaption class="cap">Circle of twelve stars · official colours</figcaption>
-        </figure>
-
-        <h2>Orders and EU impact</h2>
-        <p class="lede">European Green Deal and Farm to Fork: short distance, vegan lock, transparent withholding.</p>
-        <div class="statgrid">
-          <div class="stat"><span>Withholding</span><b>2%</b></div>
-          <div class="stat"><span>Vegan</span><b>100%</b></div>
-          <div class="stat"><span>Fence</span><b>300 m</b></div>
-          <div class="stat"><span>CO₂</span><b>0.12</b></div>
+        <h2>More</h2>
+        <div class="toggles">
+          <button type="button" class="btn ghost" data-act="simple" id="btn-simple">Simple Mode</button>
+          <button type="button" class="btn ghost" data-act="vegan" id="btn-vegan">Plant-based Mode</button>
         </div>
-
-        <div class="essay">
-          <figure>
-            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=70" width="800" height="500" alt="Sunrise holding" />
-            <figcaption>Holding</figcaption>
-          </figure>
-          <figure>
-            <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=800&q=70" width="800" height="500" alt="Strawberries" />
-            <figcaption>Fruit</figcaption>
-          </figure>
-          <figure>
-            <img src="https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&w=800&q=70" width="800" height="500" alt="Tomatoes" />
-            <figcaption>Vegetable</figcaption>
-          </figure>
-          <figure>
-            <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=70" width="800" height="500" alt="Greens" />
-            <figcaption>Greens</figcaption>
-          </figure>
+        <p class="plain" id="one-liner">This app shows fresh food that local farmers have available right now, so you can buy food directly from farms near you.</p>
+        <h3>Where did this food come from?</h3>
+        <div class="chain good"><p>This platform</p><ol><li>Farm</li><li>Nearby buyer</li></ol><p class="plain tight">Shorter route. Faster food. Fewer extra steps.</p></div>
+        <div class="chain long"><p>A typical long route (example)</p><ol><li>Farm</li><li>Collector</li><li>Warehouse</li><li>Store</li><li>Buyer</li></ol><p class="plain tight">Why move food 100 km when a crate may sit 300 m away? This is an example, not a claim about every shop.</p></div>
+        <h3>From harvest to table — fast</h3>
+        <div id="fresh-strip" class="cite"></div>
+        <h3>What is in season near Ankara · September</h3>
+        <p class="plain tight">Local autumn harvests in this region typically include grapes (Kalecik), apples, tomatoes (late Ayas), peppers and garden vegetables. Strawberries in the stall are a live listing, not a claim that they are peak season.</p>
+        <div class="season"><span>Grapes</span><span>Apples</span><span>Tomatoes</span><span>Peppers</span><span>Greens</span></div>
+        <h3>Farmer profiles</h3>
+        <div id="profile-list" class="stack"></div>
+        <h3>For restaurants and local kitchens</h3>
+        <p class="plain">Need a bulk crate? The list below matches a sample kitchen order of 20 kg tomatoes against nearby farms.</p>
+        <div id="b2b-list" class="stack"></div>
+        <h3>Cooperative mode</h3>
+        <p class="plain">A cooperative can list harvests for several small farms together, share one stall, and sell as a group. This demo treats the Ankara holdings as one short-chain group.</p>
+        <div id="coop-box" class="cite"></div>
+        <h3>Network numbers (this device)</h3>
+        <div id="impact-grid" class="statgrid"></div>
+        <p class="fine">Carbon figures are estimates using the method on the receipt: assumed 8 km shop trip minus your farm distance, times 0.12 kg CO2e/km, plus 0.35 kg handling. Not a verified life-cycle assessment. We do not call a purchase zero-carbon.</p>
+        <h3>European references</h3>
+        <p class="plain tight">GreenPick is not an EU body and is not described here as EU-funded or EU-endorsed.</p>
+        <article class="policy"><h4>Farm to Fork Strategy</h4><p>The Farm to Fork Strategy is the European Commission plan for a fairer, healthier, lower-impact food system. It sits inside the European Green Deal. This app uses the same idea in plain words: a short path from farm to table.</p><a class="ext" href="https://food.ec.europa.eu/horizontal-topics/farm-fork-strategy_en" target="_blank" rel="noopener">Official Commission page</a> <a class="ext" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52020DC0381" target="_blank" rel="noopener">COM(2020) 381 final on EUR-Lex</a></article>
+        <article class="policy"><h4>EU Organic Regulation 2018/848</h4><p>Regulation (EU) 2018/848 is the EU legal framework for organic production and labelling. Only lots marked EU Organic Certified use that label. Local or short-chain is not the same as organic.</p><a class="ext" href="https://eur-lex.europa.eu/eli/reg/2018/848/oj" target="_blank" rel="noopener">EUR-Lex · Regulation (EU) 2018/848</a> <a class="ext" href="https://agriculture.ec.europa.eu/farming/organic-farming/legislation_en" target="_blank" rel="noopener">Commission organics legislation page</a></article>
+        <article class="policy"><h4>European Green Deal</h4><p>The European Green Deal is the EU growth plan toward climate neutrality. Food systems sit inside that plan. Mention here is context, not a partnership claim.</p><a class="ext" href="https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_en" target="_blank" rel="noopener">Official Commission page</a></article>
+        <h3>Potential European funding pathways</h3>
+        <p class="plain">These are routes to investigate. None of the cards below means GreenPick has received, or is eligible for, that money. Eligibility depends on legal form, country, partners and call text.</p>
+        <div class="fund">
+          <article><h4>Horizon Europe</h4><p>Research and innovation on food systems, climate and digital tools.</p><p class="meta">Instrument: grants · Typical applicant: consortium · Stage: R&amp;I</p><a class="ext" href="https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-europe_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>European Innovation Council</h4><p>Breakthrough and scale-up support for high-risk innovation, including Accelerator grant plus equity.</p><p class="meta">Instrument: grant / equity · Typical applicant: SME/startup · Stage: scale</p><a class="ext" href="https://eic.ec.europa.eu/index_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>Common Agricultural Policy</h4><p>National CAP Strategic Plans may cover farmer cooperation, rural innovation and digitalisation.</p><p class="meta">Instrument: national/regional CAP · Typical applicant: farmer, co-op · Stage: operations</p><a class="ext" href="https://agriculture.ec.europa.eu/common-agricultural-policy_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>Rural development / EAFRD tools</h4><p>Investigate rural innovation and cooperation measures in the relevant CAP plan.</p><p class="meta">Instrument: rural development · Typical applicant: rural actor · Stage: local</p><a class="ext" href="https://agriculture.ec.europa.eu/common-agricultural-policy/rural-development_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>European Regional Development Fund</h4><p>Possible relevance to regional digital and sustainable-development projects. Check the managing authority.</p><p class="meta">Instrument: ERDF · Typical applicant: public/private regional · Stage: regional</p><a class="ext" href="https://ec.europa.eu/regional_policy/funding/erdf_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>LIFE Programme</h4><p>Environment, climate action, circular economy. Only where a call matches measurable environmental work.</p><p class="meta">Instrument: grants · Typical applicant: consortium · Stage: environment</p><a class="ext" href="https://cinea.ec.europa.eu/programmes/life_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>Digital Europe Programme</h4><p>Digital infrastructure and ecosystems. Relevant only if the product becomes shared digital infrastructure.</p><p class="meta">Instrument: grants · Typical applicant: consortium · Stage: digital</p><a class="ext" href="https://digital-strategy.ec.europa.eu/en/activities/digital-programme" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>InvestEU</h4><p>Guarantees and financing through implementing partners. Investigate. Do not assume access.</p><p class="meta">Instrument: guarantee / finance · Typical applicant: via intermediary · Stage: scale</p><a class="ext" href="https://investeu.europa.eu/index_en" target="_blank" rel="noopener">Official page</a></article>
+          <article><h4>EIB / EIF</h4><p>Possible financing or guarantees through banks and funds. Always via an intermediary.</p><p class="meta">Instrument: loan / guarantee · Typical applicant: via bank/fund · Stage: later</p><a class="ext" href="https://www.eib.org/en/index.htm" target="_blank" rel="noopener">EIB</a> <a class="ext" href="https://www.eif.org/" target="_blank" rel="noopener">EIF</a></article>
         </div>
-
-        <div class="eu-card">
-          <div class="eu-card-flag" aria-hidden="true">
-            <svg viewBox="0 0 72 48"><rect width="72" height="48" fill="#003399"/><g fill="#FFCC00" transform="translate(36 24) scale(.55)">
-              <g id="st2"><polygon points="0,-11 3.1,-3.4 11,-3.4 4.7,1.3 7.1,9.1 0,4.2 -7.1,9.1 -4.7,1.3 -11,-3.4 -3.1,-3.4"/></g>
-              <use href="#st2" transform="rotate(30)"/><use href="#st2" transform="rotate(60)"/>
-              <use href="#st2" transform="rotate(90)"/><use href="#st2" transform="rotate(120)"/>
-              <use href="#st2" transform="rotate(150)"/><use href="#st2" transform="rotate(180)"/>
-              <use href="#st2" transform="rotate(210)"/><use href="#st2" transform="rotate(240)"/>
-              <use href="#st2" transform="rotate(270)"/><use href="#st2" transform="rotate(300)"/>
-              <use href="#st2" transform="rotate(330)"/>
-            </g></svg>
-          </div>
-          <div>
-            <strong>European Union</strong>
-            <p>Farm to Fork · Green Deal · Organic regulation (EU) 2018/848 · Short food supply chain</p>
-          </div>
-        </div>
-        <div class="cite">Official Journal alignment · From farm to fork, not warehouse to aisle.</div>
-        <h3>Receipts</h3>
+        <h3>Your receipts</h3>
         <div id="order-list" class="stack"></div>
-        <button type="button" class="btn ghost" data-act="reset">Reset demo</button>
-        <p class="colophon">GreenPick · European Union Farm to Fork</p>
+        <button type="button" class="btn ghost" data-act="reset">Reset this demo</button>
+        <p class="colophon">GreenPick · Fresh food. Nearby farms. Minimal distance.</p>
       </section>
     </div>
-
     <footer class="foot">
-      <nav class="rail" id="dock" aria-label="Contents">
-        <button type="button" data-go="screen-home" class="on">Market</button>
+      <nav class="rail" id="dock" aria-label="Main">
+        <button type="button" data-go="screen-home" class="on">Home</button>
         <button type="button" data-go="screen-map">Map</button>
-        <button type="button" data-go="screen-buy">Till</button>
-        <button type="button" data-go="screen-farm">Holding</button>
-        <button type="button" data-go="screen-more">Dossier</button>
+        <button type="button" data-go="screen-buy">Buy</button>
+        <button type="button" data-go="screen-farm">List</button>
+        <button type="button" data-go="screen-more">More</button>
       </nav>
       <div class="imprint">
         <p class="imprint-title">GreenPick</p>
-        <p class="imprint-line">Farm to Fork dossier · Reg. (EU) 2018/848</p>
+        <p class="imprint-line">Fresh food from farms near you</p>
       </div>
       <div class="foot-sky" aria-hidden="true"></div>
     </footer>
   </div>
-  <script src="./app.js?v=eu10"></script>
+  <script src="./app.js?v=eu11"></script>
 </body>
 </html>
