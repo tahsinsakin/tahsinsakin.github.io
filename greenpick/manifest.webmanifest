@@ -1,7 +1,7 @@
 {
   "name": "GreenPick",
   "short_name": "GreenPick",
-  "description": "European Union Farm to Fork dossier — vegan harvest plates, 300 m fence, euro till",
+  "description": "Fresh food from farms near you. See what local farmers have ready today and buy it directly.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
