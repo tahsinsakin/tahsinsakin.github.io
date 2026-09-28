@@ -8,195 +8,179 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="GreenPick" />
-  <meta name="description" content="GreenPick connects local farmers and consumers through ultra-short, digital food supply chains." />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" />
-  <link rel="stylesheet" href="./styles.css?v=gp13" />
-  <title>GreenPick</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="./styles.css?v=eu10" />
+  <title>GreenPick · European Union Farm to Fork</title>
 </head>
 <body>
+  <div id="grain" aria-hidden="true"></div>
   <div id="app">
-    <header class="top">
-      <div class="safe"></div>
-      <div class="brandbar">
-        <div class="brand">
-          <img class="mark" src="./icon.svg" width="36" height="36" alt="" />
-          <div>
+    <header class="mast">
+      <div class="mast-sky" aria-hidden="true"></div>
+      <div class="mast-plate">
+        <div class="mast-brand">
+          <div class="mast-mark" aria-hidden="true">
+            <svg viewBox="0 0 120 80" class="flag" role="img">
+              <rect width="120" height="80" fill="#003399"/>
+              <g fill="#FFCC00" transform="translate(60 40)">
+                <g id="st"><polygon points="0,-11 3.1,-3.4 11,-3.4 4.7,1.3 7.1,9.1 0,4.2 -7.1,9.1 -4.7,1.3 -11,-3.4 -3.1,-3.4"/></g>
+                <use href="#st" transform="rotate(30)"/><use href="#st" transform="rotate(60)"/>
+                <use href="#st" transform="rotate(90)"/><use href="#st" transform="rotate(120)"/>
+                <use href="#st" transform="rotate(150)"/><use href="#st" transform="rotate(180)"/>
+                <use href="#st" transform="rotate(210)"/><use href="#st" transform="rotate(240)"/>
+                <use href="#st" transform="rotate(270)"/><use href="#st" transform="rotate(300)"/>
+                <use href="#st" transform="rotate(330)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="mast-copy">
+            <p class="mast-kicker">European Union</p>
             <h1>GreenPick</h1>
-            <p class="tag">Fresh food. Direct from nearby farms.</p>
+            <p class="mast-sub">Farm to Fork dossier</p>
           </div>
         </div>
-        <button type="button" class="iconbtn" data-act="push" aria-label="Harvest alerts">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.2 2.2 0 0 0 2.1-1.6H9.9A2.2 2.2 0 0 0 12 22Zm7-5V11a7 7 0 1 0-14 0v6L3 19v1h18v-1l-2-2Z" fill="currentColor"/></svg>
-        </button>
+        <p class="mast-role"><span id="role-label">Buyer</span></p>
       </div>
+      <p class="mast-meta">Farm to Fork Strategy · DG Agriculture · COM(2020) 381 final</p>
     </header>
-    <div id="toast" class="toast hidden" role="status"></div>
     <div class="pager" id="pager">
       <section class="page" id="screen-home">
-        <p class="sec">What’s fresh near you?</p>
-        <div class="locate">
-          <button type="button" class="locbtn" data-act="place" id="loc-chip">Ankara · 2 km</button>
-          <button type="button" class="locbtn ghost" data-act="go" data-go="screen-explore">Search</button>
+        <figure class="hero">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Holding at sunrise" />
+          <figcaption class="cap">Holding at first light</figcaption>
+        </figure>
+        <p class="kicker">Official Journal · Market</p>
+        <h2>Harvest stall</h2>
+        <p class="lede">Exact GPS unlocks after payment. Lots carry a Farm to Fork, organic, or short-supply-chain mark.</p>
+        <div class="cite">Reg. (EU) 2018/848 · COM(2020) 381 final · European Green Deal</div>
+        <div class="pills"><span class="pill gold">EU organic</span><span class="pill">100% vegan</span><span class="pill">300 m fence</span><span class="pill">Euro till</span></div>
+        <div class="split">
+          <button type="button" class="btn" data-act="role" data-role="CUSTOMER" id="role-c">I am a buyer</button>
+          <button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">I am a grower</button>
         </div>
-        <aside class="eu-strip">
-          <p class="eu-kicker">European food system</p>
-          <p class="eu-line">Built for Europe’s sustainable food transition</p>
-          <p class="eu-sub">GreenPick connects local farmers and consumers through ultra-short, digital food supply chains.</p>
-          <p class="eu-note">Designed to align with European sustainability and agricultural innovation priorities.</p>
-          <div class="eu-marks" id="eu-marks"></div>
-          <button type="button" class="btn eu" data-act="eu" data-eu="overview">Explore GreenPick’s European alignment</button>
-        </aside>
-        <div class="secrow">
-          <p class="sec">Fresh around you</p>
-          <button type="button" class="quiet" data-act="go" data-go="screen-explore">See all</button>
+        <p class="hint">Safari → Share → Add to Home Screen</p>
+        <div class="seals">
+          <div class="seal"><span>Farm to Fork</span></div>
+          <div class="seal"><span>Organic 2018/848</span></div>
+          <div class="seal"><span>Green Deal</span></div>
         </div>
-        <div id="home-feature"></div>
-        <div id="home-feed"></div>
-        <p class="sec">Map discovery</p>
-        <button type="button" class="mapenter" data-act="go" data-go="screen-map">
-          <span>Open the live farm map</span>
-          <small>Farms and harvests near your pin · contact stays locked</small>
-        </button>
-        <p class="facts" id="facts">300 m — average local distance · Today — freshly listed · Short-chain — direct sourcing</p>
-        <p class="sec">Farmers nearby</p>
-        <div id="home-farmers"></div>
-        <p class="sec">How GreenPick works</p>
-        <ol class="steps">
-          <li>Farmer lists what is ready</li>
-          <li>You discover it nearby</li>
-          <li>Local food reaches you</li>
-        </ol>
-      </section>
-      <section class="page" id="screen-explore">
-        <p class="sec">Explore</p>
-        <label class="sr" for="q">Search harvests</label>
-        <input id="q" type="search" placeholder="Strawberries, honey, bread…" />
-        <div class="chips" id="explore-cats"></div>
-        <div class="chips" id="explore-filters"></div>
-        <div id="explore-list"></div>
+        <h3>Today’s stall</h3>
+        <div id="market-list" class="stack"></div>
       </section>
       <section class="page" id="screen-map">
-        <p class="sec">Map</p>
-        <p class="lede">Pins stay offset until a harvest is settled. Farmer phone numbers stay locked until paid contact.</p>
-        <div class="mapbox" id="mapbox"><iframe id="map-frame" title="Nearby farms" loading="lazy"></iframe></div>
-        <div class="pinrow" id="pinrow"></div>
-        <div class="split2">
-          <button type="button" class="btn" data-act="gps">Use my location</button>
-          <button type="button" class="quietx" data-act="near">I’m at a stall</button>
-        </div>
-        <div id="geo-msg"></div>
-        <div id="farm-cards"></div>
-        <div id="notif-list"></div>
-      </section>
-      <section class="page" id="screen-orders">
-        <p class="sec">Orders</p>
-        <figure class="feature" id="buy-hero-wrap">
-          <img id="buy-hero" src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=75" width="1200" height="675" alt="" />
-          <figcaption id="buy-cap">Choose a harvest to reserve or buy</figcaption>
+        <figure class="hero">
+          <img src="https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=1200" width="1200" height="675" alt="Wheat holding" />
+          <figcaption class="cap">Holdings · pins stay offset until the till</figcaption>
         </figure>
-        <h2 id="buy-title">Your order</h2>
-        <p class="lede" id="buy-farm">Buy a harvest to open the farm address. Phone contact is a separate paid reveal.</p>
+        <p class="kicker">Map</p>
+        <h2>Nearby holdings</h2>
+        <p class="lede">Full GPS stays locked. A 300 m fence can notify you of a ready lot.</p>
+        <div class="cite">Geofence 300 m · jittered public pin · exact address after settlement</div>
+        <div class="mapbox"><iframe id="map-frame" title="map" loading="lazy"></iframe></div>
+        <button type="button" class="btn" data-act="gps">Use my location</button>
+        <button type="button" class="btn ghost" data-act="near">I am at the stall</button>
+        <button type="button" class="btn ghost" data-act="push">Allow notifications</button>
+        <div id="geo-msg"></div>
+        <h3>Holdings</h3>
+        <div id="farm-cards" class="stack"></div>
+        <h3>Notices</h3>
+        <div id="notif-list" class="stack"></div>
+      </section>
+      <section class="page" id="screen-buy">
+        <figure class="hero" id="buy-hero-wrap">
+          <img id="buy-hero" src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Lot photograph" />
+          <figcaption class="cap" id="buy-cap">Till · location sealed until the receipt</figcaption>
+        </figure>
+        <p class="kicker">Till</p>
+        <h2 id="buy-title">Settlement</h2>
+        <p class="lede" id="buy-farm">Choose a lot at the stall. Location does not open until the receipt is cut.</p>
         <input type="hidden" id="buy-pid" />
         <div id="buy-form" class="hidden">
-          <label for="buy-qty">Quantity (kg)</label>
+          <label for="buy-qty">Quantity</label>
           <input id="buy-qty" type="number" min="1" value="1" inputmode="numeric" />
-          <label for="buy-km">Your trip (km)</label>
-          <input id="buy-km" type="number" min="0.2" step="0.1" value="0.3" inputmode="decimal" />
+          <label for="buy-km">Distance km</label>
+          <input id="buy-km" type="number" min="0.2" step="0.1" value="6" inputmode="decimal" />
           <div id="quote-box"></div>
           <label for="buy-pan">Card · last digit 3 is declined</label>
           <input id="buy-pan" inputmode="numeric" value="4242424242424242" autocomplete="off" />
-          <button type="button" class="btn" data-act="pay">Pay and show farm address</button>
-          <button type="button" class="quietx" data-act="reserve">Reserve without paying</button>
+          <button type="button" class="btn" data-act="pay">Pay and unlock location</button>
         </div>
-        <button type="button" class="quietx" data-act="go" data-go="screen-home" id="buy-empty-go">Browse harvests</button>
+        <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">Return to stall</button>
         <div id="buy-msg"></div>
-        <p class="sec">Receipts</p>
-        <div id="order-list"></div>
       </section>
-      <section class="page" id="screen-profile">
-        <p class="sec">Profile</p>
-        <div class="split2">
-          <button type="button" class="quietx" data-act="role" data-role="CUSTOMER" id="role-c">I’m buying</button>
-          <button type="button" class="quietx" data-act="role" data-role="FARMER" id="role-f">I grow food</button>
+      <section class="page" id="screen-farm">
+        <figure class="hero">
+          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="Holding desk" />
+          <figcaption class="cap">Holding desk · camera plate + NFC secret</figcaption>
+        </figure>
+        <p class="kicker">Holding</p>
+        <h2>Lodge a harvest</h2>
+        <p class="lede">Photograph the crate. Handover closes with an EU traceability slip and NFC secret.</p>
+        <img id="h-preview" class="photo hidden" alt="harvest" />
+        <label>Photograph</label>
+        <input id="h-file" type="file" accept="image/*" capture="environment" />
+        <label for="h-name">Lot name</label>
+        <input id="h-name" value="Morning-picked strawberries" />
+        <label for="h-desc">Description</label>
+        <textarea id="h-desc">Cut today. No cold chain.</textarea>
+        <div class="split">
+          <div><label for="h-price">Price €</label><input id="h-price" type="number" value="9" inputmode="decimal" /></div>
+          <div><label for="h-stock">Stock</label><input id="h-stock" type="number" value="12" inputmode="numeric" /></div>
         </div>
-        <div class="split2">
-          <button type="button" class="quietx" data-act="simple" id="btn-simple">Simple Mode</button>
-          <button type="button" class="quietx" data-act="vegan" id="btn-vegan">Plant-based</button>
-        </div>
-        <label for="radius-sel">Alert radius</label>
-        <select id="radius-sel">
-          <option value="500">500 m</option>
-          <option value="1000">1 km</option>
-          <option value="2000" selected>2 km</option>
-          <option value="3000">3 km</option>
-          <option value="5000">5 km</option>
-          <option value="10000">10 km</option>
+        <label for="h-cat">Category</label>
+        <select id="h-cat"><option>Fruit</option><option>Vegetable</option><option>Greens</option><option>Pulses</option></select>
+        <label for="h-eu">EU mark</label>
+        <select id="h-eu">
+          <option value="organic">EU organic (2018/848)</option>
+          <option value="f2f">Farm to Fork</option>
+          <option value="local">Short food supply chain</option>
         </select>
-        <button type="button" class="btn" data-act="push">Turn on harvest alerts</button>
-        <div id="alert-msg"></div>
-        <p class="sec">Purchased contact access</p>
-        <div id="access-list"></div>
-        <button type="button" class="quietx" data-act="eu" data-eu="overview">European alignment</button>
-        <div class="sell">
-          <p class="sec">Sell what you grow</p>
-          <p class="lede">Photo, name, kilos, price. Publish.</p>
-          <img id="h-preview" class="photo hidden" alt="Harvest photograph" />
-          <label for="h-file">Photo</label>
-          <input id="h-file" type="file" accept="image/*" capture="environment" />
-          <label for="h-name">Product</label>
-          <input id="h-name" value="Strawberries" />
-          <div class="split2">
-            <div><label for="h-stock">Kilos</label><input id="h-stock" type="number" value="3" inputmode="numeric" /></div>
-            <div><label for="h-price">€ / kg</label><input id="h-price" type="number" value="4.5" inputmode="decimal" /></div>
-          </div>
-          <label for="h-when">Harvested</label>
-          <input id="h-when" value="Today, 09:15" />
-          <label for="h-eu">Officially organic?</label>
-          <select id="h-eu">
-            <option value="organic">EU Organic Certified</option>
-            <option value="conv">In conversion</option>
-            <option value="none" selected>Not certified</option>
-          </select>
-          <label for="h-cat">Category</label>
-          <select id="h-cat">
-            <option>Fruit</option><option>Vegetable</option><option>Greens</option>
-            <option>Pantry</option><option>Bakery</option><option>Eggs</option>
-            <option>Honey</option><option>Dairy</option><option>Meat</option>
-          </select>
-          <label for="h-desc">Note</label>
-          <textarea id="h-desc">Picked this morning.</textarea>
-          <button type="button" class="btn" data-act="publish">Publish harvest</button>
-          <div id="h-msg"></div>
-          <p class="sec">Handover</p>
-          <label for="nfc-order">Order id</label>
-          <input id="nfc-order" placeholder="gp…" />
-          <label for="nfc-secret">Handover code</label>
-          <input id="nfc-secret" />
-          <button type="button" class="quietx" data-act="nfc">Verify handover</button>
-          <div id="nfc-msg"></div>
+        <button type="button" class="btn" data-act="publish">Place on stall</button>
+        <div id="h-msg"></div>
+        <h3>NFC handover</h3>
+        <label for="nfc-order">Order id</label>
+        <input id="nfc-order" placeholder="gp…" />
+        <label for="nfc-secret">NFC secret</label>
+        <input id="nfc-secret" />
+        <button type="button" class="btn ghost" data-act="nfc">Tap and verify</button>
+        <div id="nfc-msg"></div>
+      </section>
+      <section class="page" id="screen-more">
+        <p class="kicker">Dossier</p>
+        <h2>Orders and EU impact</h2>
+        <p class="lede">European Green Deal and Farm to Fork: short distance, vegan lock, transparent withholding.</p>
+        <div class="statgrid">
+          <div class="stat"><span>Withholding</span><b>2%</b></div>
+          <div class="stat"><span>Vegan</span><b>100%</b></div>
+          <div class="stat"><span>Fence</span><b>300 m</b></div>
+          <div class="stat"><span>CO₂</span><b>0.12</b></div>
         </div>
-        <p class="sec">This device</p>
-        <div id="impact-grid" class="facts"></div>
-        <p class="fine">CO2e on harvest receipts is an estimate only. GreenPick is not an EU body and is not EU-funded or endorsed.</p>
-        <button type="button" class="quietx" data-act="reset">Reset demo</button>
+        <div class="eu-card"><strong>European Union</strong><p>Farm to Fork · Green Deal · Organic regulation (EU) 2018/848 · Short food supply chain</p></div>
+        <div class="cite">Official Journal alignment · From farm to fork, not warehouse to aisle.</div>
+        <h3>Receipts</h3>
+        <div id="order-list" class="stack"></div>
+        <button type="button" class="btn ghost" data-act="reset">Reset demo</button>
+        <p class="colophon">GreenPick · European Union Farm to Fork</p>
       </section>
     </div>
-    <div id="sheet" class="sheet hidden" role="dialog" aria-modal="true">
-      <button type="button" class="sheet-dim" data-act="close" aria-label="Close"></button>
-      <div class="sheet-panel" id="sheet-panel"></div>
-    </div>
-    <nav class="tabbar" id="dock" aria-label="Main">
-      <span class="indicator" id="tab-ind" aria-hidden="true"></span>
-      <button type="button" data-go="screen-home" class="on" data-i="0">Home</button>
-      <button type="button" data-go="screen-explore" data-i="1">Explore</button>
-      <button type="button" data-go="screen-map" data-i="2">Map</button>
-      <button type="button" data-go="screen-orders" data-i="3">Orders</button>
-      <button type="button" data-go="screen-profile" data-i="4">Profile</button>
-    </nav>
+    <footer class="foot">
+      <nav class="rail" id="dock" aria-label="Contents">
+        <button type="button" data-go="screen-home" class="on">Market</button>
+        <button type="button" data-go="screen-map">Map</button>
+        <button type="button" data-go="screen-buy">Till</button>
+        <button type="button" data-go="screen-farm">Holding</button>
+        <button type="button" data-go="screen-more">Dossier</button>
+      </nav>
+      <div class="imprint">
+        <p class="imprint-title">GreenPick</p>
+        <p class="imprint-line">Farm to Fork dossier · Reg. (EU) 2018/848</p>
+      </div>
+      <div class="foot-sky" aria-hidden="true"></div>
+    </footer>
   </div>
-  <script src="./app.js?v=gp13"></script>
+  <script src="./app.js?v=eu10"></script>
 </body>
 </html>
