@@ -11,8 +11,8 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=New+Rocker&family=Cinzel:wght@600&display=swap" />
-  <link rel="stylesheet" href="./styles.css?v=sign2" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=New+Rocker&family=Cinzel:wght@600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" />
+  <link rel="stylesheet" href="./styles.css?v=sign3" />
   <title>GreenPick</title>
 </head>
 <body>
@@ -30,37 +30,39 @@
     <div class="pager" id="pager">
       <section class="page" id="screen-home" data-screen>
         <p class="kicker">Pazar</p>
-        <h2>Hasat tezgahı</h2>
-        <p class="muted">Ahşap tabela, yosun zemin. Konum ancak ödeme sonrası açılır.</p>
+        <h2 class="sign">Hasat tezgahı<span class="sub">Ahşap tabela · yosun zemin · kilitli GPS</span></h2>
+        <p class="lede">Konum ancak ödeme sonrası açılır. Tezgah biletleri, çiftçi defteri, 300 m çit.</p>
         <div class="pills">
           <span class="pill">%100 vegan</span>
           <span class="pill">300 m çit</span>
           <span class="pill">stopaj</span>
         </div>
-        <div class="grid2">
-          <button class="btn" type="button" onclick="setRole('CUSTOMER')">Alıcıyım</button>
-          <button class="btn btn-g" type="button" onclick="setRole('FARMER')">Çiftçiyim</button>
+        <div class="roles">
+          <button class="btn on" id="role-c" type="button" onclick="setRole('CUSTOMER')">Alıcıyım</button>
+          <button class="btn btn-g" id="role-f" type="button" onclick="setRole('FARMER')">Çiftçiyim</button>
         </div>
-        <div class="install muted">Safari → Paylaş → Ana Ekrana Ekle.</div>
+        <div class="install">Safari → Paylaş → Ana Ekrana Ekle. Tabela, cepte asılı kalır.</div>
+        <h3 class="rule">Bugünkü kasa</h3>
         <div id="market-list" class="stack"></div>
       </section>
       <section class="page" id="screen-map" data-screen>
         <p class="kicker">Harita</p>
-        <h2>Yakın çiftlik</h2>
-        <p class="muted">İğneler kaydırılmış. Tam GPS kilitli.</p>
+        <h2 class="sign">Yakın çiftlik<span class="sub">İğneler kaydırılmış · tam GPS kilitli</span></h2>
         <div class="mapbox"><iframe id="map-frame" title="harita" loading="lazy"></iframe></div>
-        <button class="btn" type="button" onclick="useGps()">Konumumu kullan</button>
-        <button class="btn btn-g" type="button" onclick="simulateNear()">Tezgahın yanındayım</button>
-        <button class="btn btn-g" type="button" onclick="askPush()">Bildirim izni</button>
+        <div class="actions">
+          <button class="btn" type="button" onclick="useGps()">Konumumu kullan</button>
+          <button class="btn btn-g" type="button" onclick="simulateNear()">Tezgahın yanındayım</button>
+          <button class="btn btn-g" type="button" onclick="askPush()">Bildirim izni</button>
+        </div>
         <div id="geo-msg"></div>
+        <h3 class="rule">Çiftlik plakaları</h3>
         <div id="farm-cards" class="stack"></div>
-        <h3>Bildirimler</h3>
-        <div id="notif-list"></div>
+        <h3 class="rule">Bildirimler</h3>
+        <div id="notif-list" class="stack"></div>
       </section>
       <section class="page" id="screen-buy" data-screen>
         <p class="kicker">Ödeme</p>
-        <h2 id="buy-title">Kasa</h2>
-        <p class="muted" id="buy-farm"></p>
+        <h2 class="sign" id="buy-title">Kasa<span class="sub" id="buy-farm">Fiş kesilmeden konum açılmaz</span></h2>
         <input type="hidden" id="buy-pid" />
         <label>Adet</label>
         <input id="buy-qty" type="number" min="1" value="1" oninput="quoteBuy()" />
@@ -68,14 +70,13 @@
         <input id="buy-km" type="number" min="0.2" step="0.1" value="6" oninput="quoteBuy()" />
         <div id="quote-box"></div>
         <label>Kart · son hane 3 red</label>
-        <input id="buy-pan" inputmode="numeric" value="4242424242424242" />
+        <input id="buy-pan" inputmode="numeric" value="4242424242424242" autocomplete="off" />
         <button class="btn" type="button" onclick="payNow()">Öde, konumu aç</button>
         <div id="buy-msg"></div>
       </section>
       <section class="page" id="screen-farm" data-screen>
         <p class="kicker">Çiftlik</p>
-        <h2>Hasat yükle</h2>
-        <p class="muted">Kamera capture ile açılır. Teslim NFC sır ile kapanır.</p>
+        <h2 class="sign">Hasat yükle<span class="sub">Kamera capture · teslim NFC sır ile kapanır</span></h2>
         <img id="h-preview" class="photo hidden" alt="hasat" />
         <label>Fotoğraf</label>
         <input type="file" accept="image/*" capture="environment" onchange="onPhoto(this)" />
@@ -84,14 +85,22 @@
         <label>Açıklama</label>
         <textarea id="h-desc">Bugün kesildi.</textarea>
         <div class="grid2">
-          <div><label>Fiyat ₺</label><input id="h-price" type="number" value="90" /></div>
-          <div><label>Stok</label><input id="h-stock" type="number" value="12" /></div>
+          <div>
+            <label>Fiyat ₺</label>
+            <input id="h-price" type="number" value="90" />
+          </div>
+          <div>
+            <label>Stok</label>
+            <input id="h-stock" type="number" value="12" />
+          </div>
         </div>
         <label>Kategori</label>
-        <select id="h-cat"><option>Meyve</option><option>Sebze</option><option>Yeşillik</option><option>Baklagil</option></select>
+        <select id="h-cat">
+          <option>Meyve</option><option>Sebze</option><option>Yeşillik</option><option>Baklagil</option>
+        </select>
         <button class="btn" type="button" onclick="publishHarvest()">Tezgaha koy</button>
         <div id="h-msg"></div>
-        <h3>NFC teslim</h3>
+        <h3 class="rule">NFC teslim</h3>
         <label>Sipariş id</label>
         <input id="nfc-order" placeholder="gp…" />
         <label>NFC sır</label>
@@ -101,27 +110,43 @@
       </section>
       <section class="page" id="screen-more" data-screen>
         <p class="kicker">Defter</p>
-        <h2>Sipariş ve etki</h2>
+        <h2 class="sign">Sipariş ve etki<span class="sub">Stopaj · vegan kilit · karbon cetveli</span></h2>
         <div class="statgrid">
-          <div class="card stat pad"><span class="kicker">Stopaj</span><b>%2</b></div>
-          <div class="card stat pad"><span class="kicker">Vegan</span><b>%100</b></div>
-          <div class="card stat pad"><span class="kicker">Çit</span><b>300 m</b></div>
-          <div class="card stat pad"><span class="kicker">Karbon</span><b>0.12 kg/km</b></div>
+          <div class="stat"><span>Stopaj</span><b>%2</b></div>
+          <div class="stat"><span>Vegan</span><b>%100</b></div>
+          <div class="stat"><span>Çit</span><b>300 m</b></div>
+          <div class="stat"><span>Karbon</span><b>0.12</b></div>
         </div>
-        <div id="order-list"></div>
+        <h3 class="rule">Sipariş fişleri</h3>
+        <div id="order-list" class="stack"></div>
         <button class="btn btn-g" type="button" onclick="resetDemo()">Demoyu sıfırla</button>
-        <p class="muted">Tahsin Sakin · GreenPick. Belvia köküne dokunulmadı.</p>
+        <p class="colophon">Tahsin Sakin · GreenPick · Belvia köküne dokunulmadı</p>
       </section>
     </div>
     <nav class="dock" id="dock">
-      <button data-go="screen-home" class="on" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>Pazar</button>
-      <button data-go="screen-map" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l6-3 6 3 4-2v15l-4 2-6-3-6 3V7z"/></svg>Harita</button>
-      <button data-go="screen-buy" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16l-1.5 11H5.5L4 7z"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>Kasa</button>
-      <button data-go="screen-farm" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M7 8c3 2 7 2 10 0M6 14c4 3 8 3 12 0"/></svg>Çiftlik</button>
-      <button data-go="screen-more" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Defter</button>
+      <button data-go="screen-home" class="on" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>
+        Pazar
+      </button>
+      <button data-go="screen-map" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l6-3 6 3 4-2v15l-4 2-6-3-6 3V7z"/></svg>
+        Harita
+      </button>
+      <button data-go="screen-buy" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16l-1.5 11H5.5L4 7z"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>
+        Kasa
+      </button>
+      <button data-go="screen-farm" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M7 8c3 2 7 2 10 0M6 14c4 3 8 3 12 0"/></svg>
+        Çiftlik
+      </button>
+      <button data-go="screen-more" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+        Defter
+      </button>
     </nav>
   </div>
-  <script src="./app.js?v=sign2"></script>
+  <script src="./app.js?v=sign3"></script>
   <script>
     (function () {
       const c = document.getElementById("dither");
