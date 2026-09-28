@@ -1,4 +1,4 @@
-const KEY = "greenpick.iphone.v5";
+const KEY = "greenpick.iphone.v7";
 const FENCE_M = 300;
 const STOPAJ_UNREG = 0.02;
 const FARMS = [
@@ -14,6 +14,19 @@ const SEED = [
   { id: "p5", farmId: "kizilay", name: "Daily parsley bunch", desc: "Urban 300 m stall trial.", price: 2, stock: 30, cat: "Greens", eu: "local" }
 ];
 const EU_LABEL = { organic: "EU organic \u00b7 2018/848", f2f: "EU Farm to Fork", local: "EU short supply chain" };
+const PHOTOS = {
+  p1: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=75",
+  p2: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=900&q=75",
+  p3: "https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=900&q=75",
+  p4: "https://images.unsplash.com/photo-1546470427-e26264be0b2b?auto=format&fit=crop&w=900&q=75",
+  p5: "https://images.unsplash.com/photo-1607305387299-8b4a0878b2db?auto=format&fit=crop&w=900&q=75",
+  golbasi: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=75",
+  cubuk: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=75",
+  kizilay: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=900&q=75"
+};
+const FALLBACK_SHOT = PHOTOS.golbasi;
+const STALL_SHOT = PHOTOS.kizilay;
+function shotOf(p) { return (p && p.photo) || (p && PHOTOS[p.id]) || FALLBACK_SHOT; }
 function blank() { return { role: "CUSTOMER", products: SEED.map((p) => ({ ...p })), orders: [], notifs: [], fenceSeen: {}, harvestPhoto: "" }; }
 function load() { try { const raw = localStorage.getItem(KEY); if (!raw) return blank(); const s = JSON.parse(raw); if (!Array.isArray(s.products)) return blank(); return s; } catch (e) { return blank(); } }
 let S = load();
@@ -42,7 +55,8 @@ function renderMarket() {
   if (!list.length) { box.innerHTML = '<div class="lock">Stall is empty. Lodge a harvest as a grower.</div>'; return; }
   box.innerHTML = list.map((p) => {
     const f = farmById(p.farmId) || { name: "Holding" };
-    return '<article class="card"><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(p.price) + '</span></div><p class="meta">' + f.name + ' \u00b7 stock ' + p.stock + '</p><p class="meta">' + p.desc + '</p><span class="stamp gold">' + (EU_LABEL[p.eu] || "EU Farm to Fork") + '</span><button type="button" class="btn" data-act="buy" data-id="' + p.id + '">Buy and unlock location</button></article>';
+    const shot = shotOf(p);
+    return '<article class="card"><img class="shot" src="' + shot + '" alt="' + p.name + '" /><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(p.price) + '</span></div><p class="meta">' + f.name + ' \u00b7 stock ' + p.stock + '</p><p class="meta">' + p.desc + '</p><span class="stamp gold">' + (EU_LABEL[p.eu] || "EU Farm to Fork") + '</span><button type="button" class="btn" data-act="buy" data-id="' + p.id + '">Buy and unlock location</button></article>';
   }).join("");
 }
 function renderMap(origin) {
@@ -53,7 +67,8 @@ function renderMap(origin) {
   box.innerHTML = FARMS.map((f) => {
     const d = haversine(o.lat, o.lng, f.lat, f.lng) / 1000; const j = jitter(f);
     const n = S.products.filter((p) => p.farmId === f.id && p.stock > 0).length;
-    return '<article class="card"><div class="row"><strong>' + f.name + '</strong><span class="meta">\u2248 ' + d.toFixed(1) + ' km</span></div><p class="meta">' + f.farmer + ' \u00b7 ' + n + ' lots</p><p class="meta">GPS locked \u00b7 ' + j.lat.toFixed(3) + ', ' + j.lng.toFixed(3) + ' offset</p><button type="button" class="btn ghost" data-act="farm-market" data-id="' + f.id + '">See lots</button></article>';
+    const shot = PHOTOS[f.id] || FALLBACK_SHOT;
+    return '<article class="card"><img class="shot" src="' + shot + '" alt="' + f.name + '" /><div class="row"><strong>' + f.name + '</strong><span class="meta">\u2248 ' + d.toFixed(1) + ' km</span></div><p class="meta">' + f.farmer + ' \u00b7 ' + n + ' lots</p><p class="meta">GPS locked \u00b7 ' + j.lat.toFixed(3) + ', ' + j.lng.toFixed(3) + ' offset</p><button type="button" class="btn ghost" data-act="farm-market" data-id="' + f.id + '">See lots</button></article>';
   }).join("");
 }
 function renderOrders() {
@@ -62,7 +77,8 @@ function renderOrders() {
   box.innerHTML = S.orders.map((o) => {
     const p = productById(o.productId) || { name: "lot" }; const f = farmById(o.farmId);
     const loc = o.unlocked && f ? (f.address + '<br>' + f.lat.toFixed(5) + ', ' + f.lng.toFixed(5) + ' \u00b7 ' + f.phone) : "location locked";
-    return '<article class="card"><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(o.base) + '</span></div><p class="meta">' + o.status + ' \u00b7 ' + o.id + '</p><p class="meta">withholding ' + money(o.tax) + ' \u00b7 net ' + money(o.net) + ' \u00b7 ' + o.carbon + ' kg CO2</p><p class="meta">' + loc + '</p><p class="meta">NFC: <code>' + o.nfcSecret + '</code></p><button type="button" class="btn ghost" data-act="nfc-fill" data-id="' + o.id + '">Fill NFC form</button></article>';
+    const shot = shotOf(p);
+    return '<article class="card"><img class="shot" src="' + shot + '" alt="' + p.name + '" /><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(o.base) + '</span></div><p class="meta">' + o.status + ' \u00b7 ' + o.id + '</p><p class="meta">withholding ' + money(o.tax) + ' \u00b7 net ' + money(o.net) + ' \u00b7 ' + o.carbon + ' kg CO2</p><p class="meta">' + loc + '</p><p class="meta">NFC: <code>' + o.nfcSecret + '</code></p><button type="button" class="btn ghost" data-act="nfc-fill" data-id="' + o.id + '">Fill NFC form</button></article>';
   }).join("");
 }
 function renderNotifs() {
@@ -81,6 +97,9 @@ function openBuy(pid) {
   const f = farmById(p.farmId) || { name: "Holding", taxRegistered: false };
   $("buy-pid").value = pid; setText("buy-title", p.name);
   setText("buy-farm", f.name + (f.taxRegistered ? " \u00b7 tax registered" : " \u00b7 unregistered, 2% withholding") + " \u00b7 " + (EU_LABEL[p.eu] || "EU"));
+  const hero = $("buy-hero"); const cap = $("buy-cap"); const shot = shotOf(p) || STALL_SHOT;
+  if (hero) { hero.src = shot; hero.alt = p.name; }
+  if (cap) cap.textContent = p.name + " \u00b7 sealed until settlement";
   $("buy-qty").value = 1; $("buy-form").classList.remove("hidden"); $("buy-empty-go").classList.add("hidden"); setHtml("buy-msg", ""); quoteBuy(); show("screen-buy");
 }
 function quoteBuy() {
