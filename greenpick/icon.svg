@@ -1,7 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" fill="#1e3a5f"/>
-  <rect x="36" y="36" width="440" height="440" fill="#6a3e22"/>
-  <rect x="56" y="56" width="400" height="400" fill="#14301f"/>
-  <path fill="#7da56b" d="M256 96c70 48 112 128 96 208-48-16-88-56-96-104-8 48-48 88-96 104-16-80 26-160 96-208z"/>
-  <path fill="#e8d5a3" d="M248 216v176c0 16 8 24 24 24h0c16 0 24-8 24-24V216z"/>
+  <rect x="28" y="28" width="456" height="456" fill="#2a140a"/>
+  <rect x="44" y="44" width="424" height="424" fill="#6a3e22"/>
+  <rect x="60" y="60" width="392" height="392" fill="#14301f"/>
+  <rect x="76" y="76" width="360" height="360" fill="none" stroke="#8b5530" stroke-width="6"/>
+  <rect x="88" y="88" width="336" height="336" fill="none" stroke="#f6e4b8" stroke-width="1.5" stroke-dasharray="8 7" opacity=".45"/>
+  <path fill="#7da56b" d="M256 108c78 52 124 138 104 224-52-18-96-62-104-116-8 54-52 98-104 116-20-86 26-172 104-224z"/>
+  <path fill="#e8d5a3" d="M246 232v168c0 16 10 26 26 26s26-10 26-26V232z"/>
+  <text x="256" y="228" text-anchor="middle" font-family="Georgia, serif" font-size="92" fill="#f8e7bc" stroke="#2a140a" stroke-width="10" paint-order="stroke fill">G</text>
 </svg>
