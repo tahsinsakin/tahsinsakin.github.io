@@ -1,207 +1,58 @@
-const KEY = "greenpick.iphone.v8";
-const FENCE_M = 300;
-const STOPAJ_UNREG = 0.02;
-const FARMS = [
-  { id: "golbasi", name: "Golbasi Garden", farmer: "Ayse Kaya", phone: "+90 532 111 2233", address: "Karsiyaka Mah., Golbasi, Ankara", lat: 39.787, lng: 32.8041, taxRegistered: false },
-  { id: "cubuk", name: "Cubuk Soil", farmer: "Mehmet Demir", phone: "+90 533 444 5566", address: "Yukari Cavundur, Cubuk, Ankara", lat: 40.2386, lng: 33.033, taxRegistered: true },
-  { id: "kizilay", name: "Kizilay Pop-up Stall", farmer: "Elif Yilmaz", phone: "+90 535 777 8899", address: "Sakarya Cad., Kizilay, Ankara", lat: 39.9208, lng: 32.8541, taxRegistered: false }
-];
-const SEED = [
-  { id: "p1", farmId: "golbasi", name: "Open-field strawberries", desc: "Morning pick. No cold chain.", price: 9.5, stock: 40, cat: "Fruit", eu: "organic" },
-  { id: "p2", farmId: "golbasi", name: "Cut spinach crate", desc: "Same-day greens. No bagged mix.", price: 4.5, stock: 25, cat: "Greens", eu: "f2f" },
-  { id: "p3", farmId: "cubuk", name: "Plain chickpeas", desc: "Cubuk pulses, small crate.", price: 8, stock: 60, cat: "Pulses", eu: "organic" },
-  { id: "p4", farmId: "cubuk", name: "Vine tomatoes", desc: "Harvest day, unsprayed.", price: 3.8, stock: 90, cat: "Vegetable", eu: "f2f" },
-  { id: "p5", farmId: "kizilay", name: "Daily leaf", desc: "Urban 300 m stall trial.", price: 2, stock: 30, cat: "Greens", eu: "local" }
-];
-const EU_LABEL = { organic: "EU organic \u00b7 2018/848", f2f: "EU Farm to Fork", local: "EU short supply chain" };
-const PHOTOS = {
-  p1: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=75",
-  p2: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=900&q=75",
-  p3: "https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=900&q=75",
-  p4: "https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&w=900&q=75",
-  p5: "https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?auto=format&fit=crop&w=900&q=75",
-  golbasi: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=75",
-  cubuk: "https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=900",
-  kizilay: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=900&q=75"
-};
-const FALLBACK_SHOT = PHOTOS.golbasi;
-const STALL_SHOT = PHOTOS.kizilay;
-function shotOf(p) { return (p && p.photo) || (p && PHOTOS[p.id]) || FALLBACK_SHOT; }
-function imgTag(src, alt, cls) {
-  return '<img class="' + (cls || "shot") + '" src="' + src + '" alt="' + alt + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + FALLBACK_SHOT + '\'" />';
-}
-function blank() { return { role: "CUSTOMER", products: SEED.map((p) => ({ ...p })), orders: [], notifs: [], fenceSeen: {}, harvestPhoto: "" }; }
-function load() { try { const raw = localStorage.getItem(KEY); if (!raw) return blank(); const s = JSON.parse(raw); if (!Array.isArray(s.products)) return blank(); return s; } catch (e) { return blank(); } }
-let S = load();
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-function haversine(aLat, aLng, bLat, bLng) { const R = 6371000; const toR = (d) => (d * Math.PI) / 180; const dLat = toR(bLat - aLat); const dLng = toR(bLng - aLng); const s = Math.sin(dLat / 2) ** 2 + Math.cos(toR(aLat)) * Math.cos(toR(bLat)) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(s)); }
-function farmById(id) { return FARMS.find((f) => f.id === id); }
-function productById(id) { return S.products.find((p) => p.id === id); }
-function money(n) { return Number(n).toFixed(2) + " \u20ac"; }
-function carbonKg(km) { const supermarket = Math.max(km, 8); return Number(((supermarket - km) * 0.12 + 0.35).toFixed(3)); }
-function stopaj(farm, base) { const rate = farm && farm.taxRegistered ? 0 : STOPAJ_UNREG; const tax = Math.round(base * rate * 100) / 100; return { rate: rate, tax: tax, net: Math.round((base - tax) * 100) / 100 }; }
-function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return (h % 1000) / 1000; }
-function jitter(farm) { return { lat: farm.lat + (hash(farm.id) - 0.5) * 0.012, lng: farm.lng + (hash(farm.id + "x") - 0.5) * 0.012 }; }
-async function shaHex(text) { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)); return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join(""); }
-const $ = (id) => document.getElementById(id);
-function setHtml(id, html) { const el = $(id); if (el) el.innerHTML = html; }
-function setText(id, t) { const el = $(id); if (el) el.textContent = t; }
-function show(id) {
-  const page = $(id); const pager = $("pager"); if (!page || !pager) return;
-  const go = () => { const left = page.offsetLeft; try { pager.scrollTo({ left: left, behavior: "smooth" }); } catch (e) { pager.scrollLeft = left; } page.scrollTop = 0; };
-  go(); requestAnimationFrame(go);
-  document.querySelectorAll(".rail button").forEach((b) => { b.classList.toggle("on", b.getAttribute("data-go") === id); });
-}
-function renderMarket() {
-  const box = $("market-list"); if (!box) return;
-  const list = S.products.filter((p) => p.stock > 0);
-  if (!list.length) { box.innerHTML = '<div class="lock">Stall is empty. Lodge a harvest as a grower.</div>'; return; }
-  box.innerHTML = list.map((p) => {
-    const f = farmById(p.farmId) || { name: "Holding" };
-    const shot = shotOf(p);
-    return '<article class="card"><div class="media">' + imgTag(shot, p.name, "shot") + '</div><div class="body"><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(p.price) + '</span></div><p class="meta">' + f.name + ' \u00b7 stock ' + p.stock + '</p><p class="meta">' + p.desc + '</p><span class="stamp gold">' + (EU_LABEL[p.eu] || "EU Farm to Fork") + '</span></div><button type="button" class="btn" data-act="buy" data-id="' + p.id + '">Buy and unlock location</button></article>';
-  }).join("");
-}
-function renderMap(origin) {
-  const o = origin || S.lastGps || { lat: 39.9334, lng: 32.8597 };
-  const frame = $("map-frame");
-  if (frame) frame.src = "https://www.openstreetmap.org/export/embed.html?bbox=" + (o.lng - 0.25) + "%2C" + (o.lat - 0.18) + "%2C" + (o.lng + 0.25) + "%2C" + (o.lat + 0.18) + "&layer=mapnik&marker=" + o.lat + "%2C" + o.lng;
-  const box = $("farm-cards"); if (!box) return;
-  box.innerHTML = FARMS.map((f) => {
-    const d = haversine(o.lat, o.lng, f.lat, f.lng) / 1000; const j = jitter(f);
-    const n = S.products.filter((p) => p.farmId === f.id && p.stock > 0).length;
-    const shot = PHOTOS[f.id] || FALLBACK_SHOT;
-    return '<article class="card"><div class="media">' + imgTag(shot, f.name, "shot") + '</div><div class="body"><div class="row"><strong>' + f.name + '</strong><span class="meta">\u2248 ' + d.toFixed(1) + ' km</span></div><p class="meta">' + f.farmer + ' \u00b7 ' + n + ' lots</p><p class="meta">GPS locked \u00b7 ' + j.lat.toFixed(3) + ', ' + j.lng.toFixed(3) + ' offset</p></div><button type="button" class="btn ghost" data-act="farm-market" data-id="' + f.id + '">See lots</button></article>';
-  }).join("");
-}
-function renderOrders() {
-  const box = $("order-list"); if (!box) return;
-  if (!S.orders.length) { box.innerHTML = '<div class="lock">No orders yet.</div><button type="button" class="btn" data-act="go" data-go="screen-home">Go to market</button>'; return; }
-  box.innerHTML = S.orders.map((o) => {
-    const p = productById(o.productId) || { name: "lot" }; const f = farmById(o.farmId);
-    const loc = o.unlocked && f ? (f.address + '<br>' + f.lat.toFixed(5) + ', ' + f.lng.toFixed(5) + ' \u00b7 ' + f.phone) : "location locked";
-    const shot = shotOf(p);
-    return '<article class="card"><div class="media">' + imgTag(shot, p.name, "shot") + '</div><div class="body"><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(o.base) + '</span></div><p class="meta">' + o.status + ' \u00b7 ' + o.id + '</p><p class="meta">withholding ' + money(o.tax) + ' \u00b7 net ' + money(o.net) + ' \u00b7 ' + o.carbon + ' kg CO2</p><p class="meta">' + loc + '</p><p class="meta">NFC: <code>' + o.nfcSecret + '</code></p></div><button type="button" class="btn ghost" data-act="nfc-fill" data-id="' + o.id + '">Fill NFC form</button></article>';
-  }).join("");
-}
-function renderNotifs() {
-  const box = $("notif-list"); if (!box) return;
-  box.innerHTML = S.notifs.slice(0, 8).map((n) => '<article class="card"><strong>' + n.title + '</strong><p class="meta">' + n.body + '</p></article>').join("") || '<p class="meta">No notices.</p>';
-}
-function setRole(role) {
-  S.role = role === "FARMER" ? "FARMER" : "CUSTOMER"; save();
-  setText("role-label", S.role === "FARMER" ? "Grower" : "Buyer");
-  const c = $("role-c"), f = $("role-f");
-  if (c && f) { c.classList.toggle("on", S.role === "CUSTOMER"); c.classList.toggle("ghost", S.role !== "CUSTOMER"); f.classList.toggle("on", S.role === "FARMER"); f.classList.toggle("ghost", S.role !== "FARMER"); }
-}
-function openBuy(pid) {
-  const p = productById(pid);
-  if (!p) { setHtml("buy-msg", '<div class="err">Lot not found. Return to the stall.</div>'); show("screen-buy"); return; }
-  const f = farmById(p.farmId) || { name: "Holding", taxRegistered: false };
-  $("buy-pid").value = pid; setText("buy-title", p.name);
-  setText("buy-farm", f.name + (f.taxRegistered ? " \u00b7 tax registered" : " \u00b7 unregistered, 2% withholding") + " \u00b7 " + (EU_LABEL[p.eu] || "EU"));
-  const hero = $("buy-hero"); const cap = $("buy-cap"); const shot = shotOf(p) || STALL_SHOT;
-  if (hero) { hero.src = shot; hero.alt = p.name; }
-  if (cap) cap.textContent = p.name + " \u00b7 sealed until settlement";
-  $("buy-qty").value = 1; $("buy-form").classList.remove("hidden"); $("buy-empty-go").classList.add("hidden"); setHtml("buy-msg", ""); quoteBuy(); show("screen-buy");
-}
-function quoteBuy() {
-  const p = productById(($("buy-pid") || {}).value); if (!p) return;
-  const f = farmById(p.farmId); const qty = Math.max(1, Number(($("buy-qty") || {}).value || 1)); const base = p.price * qty; const tax = stopaj(f, base); const km = Number(($("buy-km") || {}).value || 6); const co2 = carbonKg(km);
-  setHtml("quote-box", '<div class="quote"><div class="line"><span>Amount</span><span>' + money(base) + '</span></div><div class="line"><span>Withholding ' + (tax.rate ? "%" + (tax.rate * 100) : "none") + '</span><span>' + money(tax.tax) + '</span></div><div class="line"><span>Grower net</span><span>' + money(tax.net) + '</span></div><div class="line"><span>Carbon \u00b7 EU F2F</span><span>' + co2 + ' kg</span></div></div>');
-}
-async function payNow() {
-  const p = productById(($("buy-pid") || {}).value);
-  if (!p) { setHtml("buy-msg", '<div class="err">Choose a lot at the stall first.</div>'); return; }
-  const f = farmById(p.farmId); const qty = Math.max(1, Number(($("buy-qty") || {}).value || 1));
-  if (qty > p.stock) { setHtml("buy-msg", '<div class="err">Not enough stock (' + p.stock + ')</div>'); return; }
-  const pan = String(($("buy-pan") || {}).value || "").replace(/\s/g, "");
-  if (!/^\d{13,19}$/.test(pan)) { setHtml("buy-msg", '<div class="err">Invalid card number</div>'); return; }
-  if (pan.endsWith("3")) { setHtml("buy-msg", '<div class="err">Simulated decline: last digit 3. Try 4242\u20262.</div>'); return; }
-  const base = p.price * qty; const tax = stopaj(f, base); const km = Number(($("buy-km") || {}).value || 6);
-  const secret = [...crypto.getRandomValues(new Uint8Array(12))].map((b) => b.toString(16).padStart(2, "0")).join("");
-  const order = { id: "gp" + Date.now().toString(36), productId: p.id, farmId: f.id, qty: qty, base: base, tax: tax.tax, net: tax.net, carbon: carbonKg(km), km: km, status: "PAID", nfcSecret: secret, unlocked: true, createdAt: new Date().toISOString() };
-  p.stock -= qty; S.orders.unshift(order); save();
-  if ($("nfc-order")) $("nfc-order").value = order.id; if ($("nfc-secret")) $("nfc-secret").value = secret;
-  setHtml("buy-msg", '<div class="ok">Paid. European Union traceability slip issued. Location unlocked.<br><b>' + f.name + '</b><br>' + f.address + '<br>' + f.lat.toFixed(5) + ', ' + f.lng.toFixed(5) + '<br>Tel: ' + f.phone + '<br>NFC secret: <code>' + secret + '</code><br>Order: <code>' + order.id + '</code></div><button type="button" class="btn" data-act="go" data-go="screen-more">Open dossier</button><button type="button" class="btn ghost" data-act="go" data-go="screen-farm">Go to NFC handover</button>');
-  renderMarket(); renderOrders();
-}
-function useGps() {
-  setHtml("geo-msg", '<div class="note">Requesting location\u2026</div>');
-  if (!navigator.geolocation) { setHtml("geo-msg", '<div class="err">This browser will not share location.</div>'); return; }
-  navigator.geolocation.getCurrentPosition(function(pos) { const o = { lat: pos.coords.latitude, lng: pos.coords.longitude }; S.lastGps = o; save(); renderMap(o); scanFence(o); }, function(err) { setHtml("geo-msg", '<div class="err">Location permission required. Code ' + (err && err.code ? err.code : "?") + '. Retry over HTTPS.</div>'); }, { enableHighAccuracy: true, timeout: 12000 });
-}
-function simulateNear() { const f = farmById("kizilay"); const o = { lat: f.lat + 0.0008, lng: f.lng + 0.0004 }; S.lastGps = o; save(); renderMap(o); scanFence(o); }
-function scanFence(o) {
-  const hits = []; S.products.forEach((p) => { const f = farmById(p.farmId); if (!f || p.stock <= 0) return; const m = haversine(o.lat, o.lng, f.lat, f.lng); if (m <= FENCE_M) hits.push({ p: p, f: f, m: m }); });
-  let sent = 0; hits.forEach((h) => { if (S.fenceSeen[h.p.id]) return; S.fenceSeen[h.p.id] = true; S.notifs.unshift({ t: Date.now(), title: h.p.name + " ready", body: h.f.name + " " + Math.round(h.m) + " m \u00b7 EU F2F" }); sent += 1; }); save();
-  setHtml("geo-msg", hits.length ? ('<div class="ok">' + hits.length + ' lots inside 300 m. ' + sent + ' new notice(s).</div>' + hits.map((h) => '<p class="meta">' + h.p.name + ' \u00b7 ' + Math.round(h.m) + ' m \u00b7 ' + h.f.name + '</p>').join("")) : '<div class="lock">No active harvest inside 300 m. Try I am at the stall for the Kizilay pop-up.</div>');
-  renderNotifs();
-  if (sent && "Notification" in window && Notification.permission === "granted") { try { new Notification(S.notifs[0].title, { body: S.notifs[0].body }); } catch (e) {} }
-}
-async function askPush() {
-  if (!("Notification" in window)) { setHtml("geo-msg", '<div class="err">Notifications API missing.</div>'); return; }
-  try { const perm = await Notification.requestPermission(); setHtml("geo-msg", '<div class="ok">Notification permission: ' + perm + '</div>'); } catch (e) { setHtml("geo-msg", '<div class="err">Permission request failed.</div>'); }
-}
-function publishHarvest() {
-  const name = (($("h-name") || {}).value || "").trim(); const price = Number(($("h-price") || {}).value); const stock = Number(($("h-stock") || {}).value);
-  if (name.length < 2 || !(price > 0) || !(stock >= 0)) { setHtml("h-msg", '<div class="err">Name, price and stock are required.</div>'); return; }
-  const item = { id: "u" + Date.now().toString(36), farmId: "golbasi", name: name, desc: ($("h-desc") || {}).value || "Today's harvest", price: price, stock: stock, cat: ($("h-cat") || {}).value || "Fruit", eu: ($("h-eu") || {}).value || "organic", photo: S.harvestPhoto || "" };
-  S.products.unshift(item); save();
-  setHtml("h-msg", '<div class="ok">On the stall. EU mark: ' + EU_LABEL[item.eu] + '.</div><button type="button" class="btn" data-act="go" data-go="screen-home">See it at market</button>');
-  renderMarket();
-}
-function onPhoto(input) {
-  const file = input && input.files && input.files[0]; if (!file) return;
-  const reader = new FileReader(); reader.onload = function() { S.harvestPhoto = reader.result; save(); const img = $("h-preview"); if (img) { img.src = reader.result; img.classList.remove("hidden"); } }; reader.readAsDataURL(file);
-}
-async function nfcTap() {
-  const orderId = (($("nfc-order") || {}).value || "").trim(); const secret = (($("nfc-secret") || {}).value || "").trim();
-  const o = S.orders.find((x) => x.id === orderId);
-  if (!o) { setHtml("nfc-msg", '<div class="err">Order not found. Use Fill NFC form in the dossier.</div>'); return; }
-  if (o.nfcSecret !== secret) { setHtml("nfc-msg", '<div class="err">NFC secret does not match.</div>'); return; }
-  const mac = (await shaHex(secret + "." + orderId)).slice(0, 16); o.status = "COMPLETED"; o.nfcMac = mac; save();
-  setHtml("nfc-msg", '<div class="ok">HMAC ' + mac + ' verified. Handover COMPLETED. EU traceability closed.</div>'); renderOrders();
-}
-function fillNfc(id) {
-  const o = S.orders.find((x) => x.id === id); if (!o) return;
-  if ($("nfc-order")) $("nfc-order").value = o.id; if ($("nfc-secret")) $("nfc-secret").value = o.nfcSecret;
-  show("screen-farm"); setHtml("nfc-msg", '<div class="ok">Secret pasted. Tap Tap and verify.</div>');
-}
-function resetDemo() { try { localStorage.removeItem(KEY); } catch (e) {} S = blank(); boot(); }
-function onAct(act, el) {
-  if (act === "role") setRole(el.getAttribute("data-role"));
-  else if (act === "buy") openBuy(el.getAttribute("data-id"));
-  else if (act === "pay") payNow();
-  else if (act === "gps") useGps();
-  else if (act === "near") simulateNear();
-  else if (act === "push") askPush();
-  else if (act === "publish") publishHarvest();
-  else if (act === "nfc") nfcTap();
-  else if (act === "nfc-fill") fillNfc(el.getAttribute("data-id"));
-  else if (act === "reset") resetDemo();
-  else if (act === "go") show(el.getAttribute("data-go"));
-  else if (act === "farm-market") { show("screen-home"); setHtml("geo-msg", ""); }
-}
-function boot() {
-  setRole(S.role || "CUSTOMER"); renderMarket(); renderMap(S.lastGps); renderOrders(); renderNotifs();
-  if (S.harvestPhoto && $("h-preview")) { $("h-preview").src = S.harvestPhoto; $("h-preview").classList.remove("hidden"); }
-  const hasPid = $("buy-pid") && $("buy-pid").value;
-  if ($("buy-form")) $("buy-form").classList.toggle("hidden", !hasPid);
-  if ($("buy-empty-go")) $("buy-empty-go").classList.toggle("hidden", !!hasPid);
-  show("screen-home");
-}
-document.addEventListener("click", function(e) {
-  const rail = e.target.closest && e.target.closest(".rail button[data-go]");
-  if (rail) { e.preventDefault(); show(rail.getAttribute("data-go")); return; }
-  const btn = e.target.closest && e.target.closest("[data-act]");
-  if (!btn) return; e.preventDefault(); onAct(btn.getAttribute("data-act"), btn);
-});
-const qty = $("buy-qty"); const km = $("buy-km");
-if (qty) qty.addEventListener("input", quoteBuy);
-if (km) km.addEventListener("input", quoteBuy);
-const file = $("h-file"); if (file) file.addEventListener("change", function() { onPhoto(file); });
-const pagerEl = $("pager");
-if (pagerEl) pagerEl.addEventListener("scroll", function() { const pages = [].slice.call(pagerEl.querySelectorAll(".page")); const i = Math.round(pagerEl.scrollLeft / Math.max(pagerEl.clientWidth, 1)); const id = pages[i] && pages[i].id; if (!id) return; document.querySelectorAll(".rail button").forEach(function(b) { b.classList.toggle("on", b.getAttribute("data-go") === id); }); }, { passive: true });
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(function() {});
+const KEY="greenpick.iphone.v12";const STOPAJ_UNREG=0.02;const PLANT=["Fruit","Vegetable","Greens","Pantry","Bakery"];const CATS=["All","Fruit","Vegetable","Greens","Pantry","Bakery","Eggs","Honey"];
+const FARMS=[{id:"valley",name:"Green Valley Farm",farmer:"Elif Yilmaz",phone:"+90 535 777 8899",address:"Kizilay, Ankara",lat:39.9208,lng:32.8541,taxRegistered:false},{id:"cankaya",name:"Ahmet's Garden",farmer:"Ahmet Kaya",phone:"+90 532 111 2233",address:"Cankaya, Ankara",lat:39.9176,lng:32.8592,taxRegistered:true},{id:"kecioren",name:"Ayse's Greens",farmer:"Ayse Demir",phone:"+90 533 444 5566",address:"Kecioren, Ankara",lat:39.9262,lng:32.8601,taxRegistered:false},{id:"yenimahalle",name:"Mehmet's Orchard",farmer:"Mehmet Arslan",phone:"+90 534 222 3344",address:"Yenimahalle, Ankara",lat:39.9310,lng:32.8448,taxRegistered:true}];
+const SEED=[{id:"p1",farmId:"valley",name:"Strawberries",desc:"Ready to harvest",price:4.5,stock:6,cat:"Fruit",eu:"none",harvested:"Ready now",vegan:true},{id:"p2",farmId:"cankaya",name:"Tomatoes",desc:"Harvested today",price:2.8,stock:12,cat:"Vegetable",eu:"organic",harvested:"Harvested today",vegan:true},{id:"p3",farmId:"kecioren",name:"Garden lettuce",desc:"Cut this morning",price:2.4,stock:8,cat:"Greens",eu:"none",harvested:"This morning",vegan:true},{id:"p4",farmId:"yenimahalle",name:"Apples",desc:"Autumn orchard",price:2.9,stock:20,cat:"Fruit",eu:"organic",harvested:"Today",vegan:true},{id:"p5",farmId:"cankaya",name:"Peppers",desc:"Seasonal crate",price:3.2,stock:7,cat:"Vegetable",eu:"organic",harvested:"Today",vegan:true},{id:"p6",farmId:"valley",name:"Farm eggs",desc:"Collected this morning",price:3.6,stock:24,cat:"Eggs",eu:"none",harvested:"This morning",vegan:false},{id:"p7",farmId:"yenimahalle",name:"Olive oil",desc:"Cold pressed, small batch",price:14,stock:10,cat:"Pantry",eu:"organic",harvested:"This week",vegan:true},{id:"p8",farmId:"kecioren",name:"Wildflower honey",desc:"Local frames",price:9.5,stock:5,cat:"Honey",eu:"none",harvested:"This season",vegan:false},{id:"p9",farmId:"valley",name:"Village bread",desc:"Wood oven, baked today",price:2.2,stock:9,cat:"Bakery",eu:"none",harvested:"Baked today",vegan:true}];
+const LABEL={organic:"EU Organic Certified",conv:"In conversion",none:"Not certified"};
+const PHOTOS={p1:"https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=75",p2:"https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&w=900&q=75",p3:"https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=900&q=75",p4:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=900&q=75",p5:"https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=900&q=75",p6:"https://images.unsplash.com/photo-1518569656558-1f25e5d87ca7?auto=format&fit=crop&w=900&q=75",p7:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=900&q=75",p8:"https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&w=900&q=75",p9:"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=75",valley:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=75",cankaya:"https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=75",kecioren:"https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=75",yenimahalle:"https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg?auto=compress&cs=tinysrgb&w=900"};
+const FALLBACK=PHOTOS.valley;const ORIGIN={lat:39.9228,lng:32.8560};
+function shot(p){return (p&&p.photo)||(p&&PHOTOS[p.id])||FALLBACK}
+function img(src,alt){return '<img src="'+src+'" alt="'+alt+'" loading="lazy" onerror="this.onerror=null;this.src=\''+FALLBACK+'\'" />'}
+function blank(){return{role:"CUSTOMER",products:SEED.map(p=>({...p})),orders:[],notifs:[],fenceSeen:{},favs:{},harvestPhoto:"",vegan:false,simple:false,radiusM:1000,cat:"All",lastGps:ORIGIN}}
+function load(){try{const r=localStorage.getItem(KEY);if(!r)return blank();const s=JSON.parse(r);if(!Array.isArray(s.products))return blank();return Object.assign(blank(),s)}catch(e){return blank()}}
+let S=load();function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function hav(a,b,c,d){const R=6371000,t=x=>x*Math.PI/180,x=t(c-a),y=t(d-b),q=Math.sin(x/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
+function farm(id){return FARMS.find(f=>f.id===id)}function prod(id){return S.products.find(p=>p.id===id)}
+function money(n){return Number(n).toFixed(2)+" \u20ac"}function co2(km){return Number(((Math.max(km,8)-km)*0.12+0.35).toFixed(3))}
+function tax(f,base){const rate=f&&f.taxRegistered?0:STOPAJ_UNREG;const t=Math.round(base*rate*100)/100;return{rate,tax:t,net:Math.round((base-t)*100)/100}}
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return (h%1000)/1000}
+function jitter(f){return{lat:f.lat+(hash(f.id)-.5)*0.008,lng:f.lng+(hash(f.id+"x")-.5)*0.008}}
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+const $=id=>document.getElementById(id);function html(id,v){const e=$(id);if(e)e.innerHTML=v}function text(id,v){const e=$(id);if(e)e.textContent=v}
+function origin(){return S.lastGps||ORIGIN}function metres(f){const o=origin();return hav(o.lat,o.lng,f.lat,f.lng)}
+function dist(m){return m<950?Math.round(m)+" m":(m/1000).toFixed(1)+" km"}
+function plant(p){return p.vegan!==false&&(PLANT.indexOf(p.cat)!==-1||p.vegan===true)}
+function toast(msg){const t=$("toast");if(!t)return;t.textContent=msg;t.classList.remove("hidden");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.add("hidden"),2200)}
+function visible(){const q=(($("q")||{}).value||"").trim().toLowerCase();return S.products.filter(p=>{if(p.stock<=0)return false;if(S.vegan&&!plant(p))return false;if(S.cat&&S.cat!=="All"&&p.cat!==S.cat)return false;if(q&&!(p.name+" "+p.desc+" "+((farm(p.farmId)||{}).name||"")).toLowerCase().includes(q))return false;return true}).map(p=>{const f=farm(p.farmId);return{p,f,m:f?metres(f):99999}}).sort((a,b)=>a.m-b.m)}
+function show(id){const page=$(id),pager=$("pager");if(!page||!pager)return;const go=()=>{const left=page.offsetLeft;try{pager.scrollTo({left,behavior:"smooth"})}catch(e){pager.scrollLeft=left}page.scrollTop=0};go();requestAnimationFrame(go);document.querySelectorAll(".tabbar button").forEach(b=>b.classList.toggle("on",b.getAttribute("data-go")===id))}
+function heart(on){return '<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.5-8.2C.7 10.2 1.2 7 3.6 5.6 5.4 4.6 7.7 5 9 6.4L12 9l3-2.6C16.3 5 18.6 4.6 20.4 5.6c2.4 1.4 2.9 4.6 1.1 7.2C19 16.4 12 21 12 21Z" fill="'+(on?"currentColor":"none")+'" stroke="currentColor" stroke-width="1.8"/></svg>'}
+function card(row){const p=row.p,f=row.f||{name:"Farm",farmer:"Grower"};const liked=!!S.favs[p.id];return '<article class="pcard"><button type="button" class="fav'+(liked?" on":"")+'" data-act="fav" data-id="'+p.id+'" aria-label="Favorite">'+heart(liked)+'</button><div class="media">'+img(shot(p),p.name)+'</div><div class="body"><div class="row"><strong>'+p.name+'</strong><span class="price">'+money(p.price)+' / kg</span></div><p class="meta">'+p.desc+' \u00b7 <span class="dist">'+dist(row.m)+'</span></p><p class="meta">From '+f.name+' \u00b7 '+f.farmer+'</p><span class="badge">'+(p.harvested||"Available now")+'</span> <span class="badge">'+(LABEL[p.eu]||"Not certified")+'</span><div class="cta split2"><button type="button" class="btn" data-act="buy" data-id="'+p.id+'">See &amp; buy</button><button type="button" class="btn ghost" data-act="contact" data-id="'+p.id+'">Contact</button></div></div></article>'}
+function chips(id){const box=$(id);if(!box)return;box.innerHTML=CATS.map(c=>'<button type="button" class="chip'+(S.cat===c?" on":"")+'" data-act="cat" data-cat="'+c+'">'+c+"</button>").join("")}
+function renderHome(){chips("home-cats");const list=visible();const first=list[0];html("home-hero",first?card(first):'<div class="lock">Nothing listed in this filter.</div>');html("home-list",list.slice(1,5).map(r=>card(r)).join("")||"");if(first)text("miles-n",dist(first.m))}
+function renderExplore(){chips("explore-cats");const list=visible();html("explore-list",list.length?list.map(r=>card(r)).join(""):'<div class="lock">No matches. Try All.</div>')}
+function renderMap(){const o=origin();const frame=$("map-frame");if(frame)frame.src="https://www.openstreetmap.org/export/embed.html?bbox="+(o.lng-0.08)+"%2C"+(o.lat-0.05)+"%2C"+(o.lng+0.08)+"%2C"+(o.lat+0.05)+"&layer=mapnik&marker="+o.lat+"%2C"+o.lng;html("pinrow",visible().slice(0,6).map(r=>'<button type="button" class="pin" data-act="buy" data-id="'+r.p.id+'">'+r.p.name+' \u00b7 '+dist(r.m)+"</button>").join(""));html("farm-cards",FARMS.map(f=>{const lots=S.products.filter(p=>p.farmId===f.id&&p.stock>0);return '<article class="pcard"><div class="media">'+img(PHOTOS[f.id]||FALLBACK,f.name)+'</div><div class="body"><div class="row"><strong>'+f.name+'</strong><span class="dist">'+dist(metres(f))+'</span></div><p class="meta">'+f.farmer+'</p><p class="meta">'+(lots.map(p=>p.name).join(" \u00b7 ")||"No harvest today")+'</p><button type="button" class="btn ghost" data-act="go" data-go="screen-explore">View harvests</button></div></article>'}).join(""))}
+function renderOrders(){const box=$("order-list");if(!box)return;if(!S.orders.length){box.innerHTML='<div class="lock">No purchases yet.</div>';return}box.innerHTML=S.orders.map(o=>{const p=prod(o.productId)||{name:"lot"};const f=farm(o.farmId);const loc=o.unlocked&&f?(f.address+" \u00b7 "+f.phone):"Location locked";return '<article class="pcard"><div class="media">'+img(shot(p),p.name)+'</div><div class="body"><div class="row"><strong>'+p.name+'</strong><span class="price">'+money(o.base)+'</span></div><p class="meta">'+o.status+' \u00b7 '+dist(o.km*1000)+' \u00b7 est. '+o.carbon+' kg CO2e</p><p class="meta">'+loc+'</p><p class="meta">Code <code>'+o.nfcSecret+'</code></p><button type="button" class="btn ghost" data-act="nfc-fill" data-id="'+o.id+'">Fill handover</button></div></article>'}).join("")}
+function renderNotifs(){html("notif-list",S.notifs.slice(0,6).map(n=>'<article class="pcard"><div class="body"><strong>'+n.title+'</strong><p class="meta">'+n.body+'</p><button type="button" class="btn" data-act="go" data-go="screen-home">View fresh produce</button></div></article>').join("")||'<p class="meta">No alerts yet.</p>')}
+function renderMore(){const avg=S.orders.length?(S.orders.reduce((n,o)=>n+Number(o.km||0),0)/S.orders.length):0;html("impact-grid",'<div class="stat"><span>Farms</span><b>'+FARMS.length+'</b></div><div class="stat"><span>Live lots</span><b>'+S.products.filter(p=>p.stock>0).length+'</b></div><div class="stat"><span>Orders</span><b>'+S.orders.length+'</b></div><div class="stat"><span>Avg km</span><b>'+avg.toFixed(2)+'</b></div>');const vs=$("btn-vegan"),sm=$("btn-simple"),c=$("role-c"),f=$("role-f");if(vs){vs.classList.toggle("on",!!S.vegan);vs.classList.toggle("ghost",!S.vegan)}if(sm){sm.classList.toggle("on",!!S.simple);sm.classList.toggle("ghost",!S.simple)}if(c&&f){c.classList.toggle("on",S.role==="CUSTOMER");c.classList.toggle("ghost",S.role!=="CUSTOMER");f.classList.toggle("on",S.role==="FARMER");f.classList.toggle("ghost",S.role!=="FARMER")}}
+function chrome(){document.documentElement.classList.toggle("simple",!!S.simple)}
+function paint(){chrome();renderHome();renderExplore();renderMap();renderOrders();renderNotifs();renderMore()}
+function setRole(role){S.role=role==="FARMER"?"FARMER":"CUSTOMER";save();paint();toast(S.role==="FARMER"?"Grower mode":"Buyer mode")}
+function openBuy(pid){const p=prod(pid);if(!p){toast("That harvest is gone.");return}const f=farm(p.farmId)||{name:"Farm",farmer:"Grower",taxRegistered:false};$("buy-pid").value=pid;text("buy-title",p.name);text("buy-farm",f.farmer+" \u00b7 "+f.name+" \u00b7 "+dist(metres(f))+" \u00b7 "+(LABEL[p.eu]||"Not certified"));const hero=$("buy-hero"),cap=$("buy-cap");if(hero){hero.src=shot(p);hero.alt=p.name}if(cap)cap.textContent=p.name+" \u00b7 address opens after payment";$("buy-qty").value=1;$("buy-form").classList.remove("hidden");$("buy-empty-go").classList.add("hidden");html("buy-msg","");quote();show("screen-orders")}
+function quote(){const p=prod(($("buy-pid")||{}).value);if(!p)return;const f=farm(p.farmId);const qty=Math.max(1,Number(($("buy-qty")||{}).value||1));const base=p.price*qty;const t=tax(f,base);const km=Number(($("buy-km")||{}).value||0.3);html("quote-box",'<div class="quote"><div class="line"><span>Amount</span><span>'+money(base)+'</span></div><div class="line"><span>Withholding</span><span>'+money(t.tax)+'</span></div><div class="line"><span>Grower net</span><span>'+money(t.net)+'</span></div><div class="line"><span>Est. CO2e</span><span>'+co2(km)+' kg</span></div></div><p class="fine">Estimate only: 8 km shop trip minus this distance x 0.12 kg/km + 0.35 kg handling.</p>')}
+async function payNow(){const p=prod(($("buy-pid")||{}).value);if(!p){html("buy-msg",'<div class="err">Pick a harvest first.</div>');return}const f=farm(p.farmId);const qty=Math.max(1,Number(($("buy-qty")||{}).value||1));if(qty>p.stock){html("buy-msg",'<div class="err">Only '+p.stock+' kg left.</div>');return}const pan=String(($("buy-pan")||{}).value||"").replace(/\s/g,"");if(!/^\d{13,19}$/.test(pan)){html("buy-msg",'<div class="err">Check the card number.</div>');return}if(pan.endsWith("3")){html("buy-msg",'<div class="err">Declined in this demo (last digit 3).</div>');return}const base=p.price*qty;const t=tax(f,base);const km=Number(($("buy-km")||{}).value||0.3);const secret=[...crypto.getRandomValues(new Uint8Array(10))].map(b=>b.toString(16).padStart(2,"0")).join("");const order={id:"gp"+Date.now().toString(36),productId:p.id,farmId:f.id,qty,base,tax:t.tax,net:t.net,carbon:co2(km),km,status:"PAID",nfcSecret:secret,unlocked:true};p.stock-=qty;S.orders.unshift(order);save();if($("nfc-order"))$("nfc-order").value=order.id;if($("nfc-secret"))$("nfc-secret").value=secret;html("buy-msg",'<div class="ok">Paid. Farm location is open.<br><b>'+f.name+'</b><br>'+f.farmer+'<br>'+f.address+'<br>'+f.phone+'<br>Code <code>'+secret+'</code></div>');toast("Added to orders");paint()}
+function useGps(){html("geo-msg",'<div class="note">Asking for location...</div>');if(!navigator.geolocation){html("geo-msg",'<div class="err">Location unavailable.</div>');return}navigator.geolocation.getCurrentPosition(pos=>{S.lastGps={lat:pos.coords.latitude,lng:pos.coords.longitude};save();paint();scan() },err=>{html("geo-msg",'<div class="err">Location needed. Code '+(err&&err.code?err.code:"?")+'.</div>')},{enableHighAccuracy:true,timeout:12000})}
+function simulateNear(){S.lastGps=ORIGIN;save();paint();scan()}
+function scan(o){const pt=o||origin();const radius=Number(S.radiusM||1000);const hits=[];S.products.forEach(p=>{const f=farm(p.farmId);if(!f||p.stock<=0)return;if(S.vegan&&!plant(p))return;const m=hav(pt.lat,pt.lng,f.lat,f.lng);if(m<=radius)hits.push({p,f,m})});let sent=0;hits.forEach(h=>{if(S.fenceSeen[h.p.id])return;S.fenceSeen[h.p.id]=true;S.notifs.unshift({t:Date.now(),title:h.p.name+" "+dist(h.m)+" away",body:h.f.name+" just listed "+h.p.name+". "+h.p.stock+" kg \u00b7 "+(h.p.harvested||"now")});sent+=1});save();const msg=hits.length?('<div class="ok">'+hits.length+" harvest(s) within "+dist(radius)+". "+sent+" new alert(s).</div>"):('<div class="lock">Nothing inside '+dist(radius)+". Widen the radius in Profile.</div>");html("geo-msg",msg);html("alert-msg",msg);renderNotifs();if(sent&&"Notification" in window&&Notification.permission==="granted"){try{new Notification(S.notifs[0].title,{body:S.notifs[0].body})}catch(e){}}if(sent)toast(S.notifs[0].title)}
+async function askPush(){if(!("Notification" in window)){html("alert-msg",'<div class="err">Alerts unavailable.</div>');return}try{const perm=await Notification.requestPermission();html("alert-msg",'<div class="ok">Permission: '+perm+"</div>");if(perm==="granted")scan()}catch(e){html("alert-msg",'<div class="err">Could not ask.</div>')}}
+function publish(){const name=(($("h-name")||{}).value||"").trim();const price=Number(($("h-price")||{}).value);const stock=Number(($("h-stock")||{}).value);if(name.length<2||!(price>0)||!(stock>=0)){html("h-msg",'<div class="err">Product, price and kilos are required.</div>');return}const cat=($("h-cat")||{}).value||"Fruit";S.products.unshift({id:"u"+Date.now().toString(36),farmId:"valley",name,desc:($("h-desc")||{}).value||"Today",price,stock,cat,eu:($("h-eu")||{}).value||"none",harvested:($("h-when")||{}).value||"Today",vegan:PLANT.indexOf(cat)!==-1,photo:S.harvestPhoto||""});save();html("h-msg",'<div class="ok">Published. Buyers nearby can see it.</div>');toast("Harvest published");paint()}
+function onPhoto(input){const file=input&&input.files&&input.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{S.harvestPhoto=r.result;save();const i=$("h-preview");if(i){i.src=r.result;i.classList.remove("hidden")}};r.readAsDataURL(file)}
+async function nfcTap(){const id=(($("nfc-order")||{}).value||"").trim();const secret=(($("nfc-secret")||{}).value||"").trim();const o=S.orders.find(x=>x.id===id);if(!o){html("nfc-msg",'<div class="err">Order not found.</div>');return}if(o.nfcSecret!==secret){html("nfc-msg",'<div class="err">Code does not match.</div>');return}o.status="COMPLETED";o.nfcMac=(await sha(secret+"."+id)).slice(0,16);save();html("nfc-msg",'<div class="ok">Handover complete.</div>');toast("Handover verified");renderOrders()}
+function fillNfc(id){const o=S.orders.find(x=>x.id===id);if(!o)return;if($("nfc-order"))$("nfc-order").value=o.id;if($("nfc-secret"))$("nfc-secret").value=o.nfcSecret;show("screen-profile");html("nfc-msg",'<div class="ok">Code pasted.</div>')}
+function onAct(act,el){if(act==="role")setRole(el.getAttribute("data-role"));else if(act==="buy")openBuy(el.getAttribute("data-id"));else if(act==="pay")payNow();else if(act==="gps")useGps();else if(act==="near")simulateNear();else if(act==="push")askPush();else if(act==="publish")publish();else if(act==="nfc")nfcTap();else if(act==="nfc-fill")fillNfc(el.getAttribute("data-id"));else if(act==="reset"){try{localStorage.removeItem(KEY)}catch(e){}S=blank();paint();show("screen-home");toast("Demo reset")}else if(act==="go")show(el.getAttribute("data-go"));else if(act==="vegan"){S.vegan=!S.vegan;save();paint();toast(S.vegan?"Plant-based on":"All food")}else if(act==="simple"){S.simple=!S.simple;save();paint()}else if(act==="cat"){S.cat=el.getAttribute("data-cat")||"All";save();paint()}else if(act==="fav"){const id=el.getAttribute("data-id");S.favs[id]=!S.favs[id];save();paint();toast(S.favs[id]?"Saved":"Removed")}else if(act==="contact"){const p=prod(el.getAttribute("data-id"));const f=p&&farm(p.farmId);if(f)toast(f.farmer+" \u00b7 "+f.phone)}}
+function boot(){paint();const sel=$("radius-sel");if(sel)sel.value=String(S.radiusM||1000);if(S.harvestPhoto&&$("h-preview")){$("h-preview").src=S.harvestPhoto;$("h-preview").classList.remove("hidden")}const has=$("buy-pid")&&$("buy-pid").value;if($("buy-form"))$("buy-form").classList.toggle("hidden",!has);if($("buy-empty-go"))$("buy-empty-go").classList.toggle("hidden",!!has);show("screen-home")}
+document.addEventListener("click",e=>{const rail=e.target.closest&&e.target.closest(".tabbar button[data-go]");if(rail){e.preventDefault();show(rail.getAttribute("data-go"));return}const btn=e.target.closest&&e.target.closest("[data-act]");if(!btn)return;e.preventDefault();onAct(btn.getAttribute("data-act"),btn)});
+["buy-qty","buy-km"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",quote)});
+const file=$("h-file");if(file)file.addEventListener("change",()=>onPhoto(file));
+const rad=$("radius-sel");if(rad)rad.addEventListener("change",()=>{S.radiusM=Number(rad.value)||1000;save()});
+const q=$("q");if(q)q.addEventListener("input",renderExplore);
+const pager=$("pager");if(pager)pager.addEventListener("scroll",()=>{const pages=[].slice.call(pager.querySelectorAll(".page"));const i=Math.round(pager.scrollLeft/Math.max(pager.clientWidth,1));const id=pages[i]&&pages[i].id;if(!id)return;document.querySelectorAll(".tabbar button").forEach(b=>b.classList.toggle("on",b.getAttribute("data-go")===id))},{passive:true});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 boot();
