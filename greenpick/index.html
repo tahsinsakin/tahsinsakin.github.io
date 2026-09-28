@@ -3,80 +3,79 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#14331c" />
+  <meta name="theme-color" content="#1e3a5f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta name="apple-mobile-web-app-title" content="GreenPick" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=New+Rocker&family=Cinzel:wght@600&display=swap" />
+  <link rel="stylesheet" href="./styles.css?v=sign2" />
   <title>GreenPick</title>
-  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="app">
+  <canvas id="dither" aria-hidden="true"></canvas>
+  <div id="app">
     <header class="top">
-      <b>GreenPick</b>
-      <small>çiftçiden kente · <span id="role-label">Alıcı</span></small>
+      <div class="barrow">
+        <div class="mark" aria-hidden="true">G</div>
+        <div class="brand">
+          <h1>GreenPick</h1>
+          <p>Farm to fork · tabela ölçeği · <span id="role-label">Alıcı</span></p>
+        </div>
+      </div>
     </header>
-    <main>
-      <section id="screen-home" data-screen>
-        <div class="hero">
-          <div class="pills">
-            <span class="pill">%100 vegan</span>
-            <span class="pill">Farm to Fork</span>
-            <span class="pill">300 m</span>
-            <span class="pill">stopaj</span>
-          </div>
-          <h1>Köyden kente, aracısız hasat.</h1>
-          <p class="meta">iPhone’da Safari ile aç, Paylaş → Ana Ekrana Ekle. Konum ancak ödeme sonrası açılır.</p>
+    <div class="pager" id="pager">
+      <section class="page" id="screen-home" data-screen>
+        <p class="kicker">Pazar</p>
+        <h2>Hasat tezgahı</h2>
+        <p class="muted">Ahşap tabela, yosun zemin. Konum ancak ödeme sonrası açılır.</p>
+        <div class="pills">
+          <span class="pill">%100 vegan</span>
+          <span class="pill">300 m çit</span>
+          <span class="pill">stopaj</span>
         </div>
-        <div class="install">
-          Ana ekran ikonu
-          <ol>
-            <li>Alttaki Paylaş düğmesi</li>
-            <li>Ana Ekrana Ekle</li>
-            <li>Ekle</li>
-          </ol>
+        <div class="grid2">
+          <button class="btn" type="button" onclick="setRole('CUSTOMER')">Alıcıyım</button>
+          <button class="btn btn-g" type="button" onclick="setRole('FARMER')">Çiftçiyim</button>
         </div>
-        <div class="statgrid">
-          <button class="btn" onclick="setRole('CUSTOMER')">Alıcıyım</button>
-          <button class="btn dark" onclick="setRole('FARMER')">Çiftçiyim</button>
-        </div>
-        <div id="market-list"></div>
+        <div class="install muted">Safari → Paylaş → Ana Ekrana Ekle.</div>
+        <div id="market-list" class="stack"></div>
       </section>
-
-      <section id="screen-map" data-screen class="hidden">
-        <h2>Yakın çiftlikler</h2>
-        <p class="meta">İğneler kaydırılmış. Tam GPS kilitli.</p>
+      <section class="page" id="screen-map" data-screen>
+        <p class="kicker">Harita</p>
+        <h2>Yakın çiftlik</h2>
+        <p class="muted">İğneler kaydırılmış. Tam GPS kilitli.</p>
         <div class="mapbox"><iframe id="map-frame" title="harita" loading="lazy"></iframe></div>
-        <button class="btn" onclick="useGps()">Konumumu kullan</button>
-        <button class="btn ghost" onclick="simulateNear()">Tezgahın yanındayım (300 m)</button>
-        <button class="btn ghost" onclick="askPush()">Bildirim izni</button>
+        <button class="btn" type="button" onclick="useGps()">Konumumu kullan</button>
+        <button class="btn btn-g" type="button" onclick="simulateNear()">Tezgahın yanındayım</button>
+        <button class="btn btn-g" type="button" onclick="askPush()">Bildirim izni</button>
         <div id="geo-msg"></div>
-        <div id="farm-cards"></div>
+        <div id="farm-cards" class="stack"></div>
         <h3>Bildirimler</h3>
         <div id="notif-list"></div>
       </section>
-
-      <section id="screen-buy" data-screen class="hidden">
-        <h2 id="buy-title">Ödeme</h2>
-        <p class="meta" id="buy-farm"></p>
+      <section class="page" id="screen-buy" data-screen>
+        <p class="kicker">Ödeme</p>
+        <h2 id="buy-title">Kasa</h2>
+        <p class="muted" id="buy-farm"></p>
         <input type="hidden" id="buy-pid" />
         <label>Adet</label>
         <input id="buy-qty" type="number" min="1" value="1" oninput="quoteBuy()" />
-        <label>Tahmini mesafe (km)</label>
+        <label>Mesafe km</label>
         <input id="buy-km" type="number" min="0.2" step="0.1" value="6" oninput="quoteBuy()" />
         <div id="quote-box"></div>
-        <label>Kart (son hane 3 = red)</label>
+        <label>Kart · son hane 3 red</label>
         <input id="buy-pan" inputmode="numeric" value="4242424242424242" />
-        <button class="btn" onclick="payNow()">Öde ve tam konumu aç</button>
+        <button class="btn" type="button" onclick="payNow()">Öde, konumu aç</button>
         <div id="buy-msg"></div>
       </section>
-
-      <section id="screen-farm" data-screen class="hidden">
+      <section class="page" id="screen-farm" data-screen>
+        <p class="kicker">Çiftlik</p>
         <h2>Hasat yükle</h2>
-        <p class="meta">iPhone kamerası capture ile açılır.</p>
+        <p class="muted">Kamera capture ile açılır. Teslim NFC sır ile kapanır.</p>
         <img id="h-preview" class="photo hidden" alt="hasat" />
         <label>Fotoğraf</label>
         <input type="file" accept="image/*" capture="environment" onchange="onPhoto(this)" />
@@ -84,46 +83,73 @@
         <input id="h-name" value="Sabah hasadı çilek" />
         <label>Açıklama</label>
         <textarea id="h-desc">Bugün kesildi.</textarea>
-        <label>Fiyat ₺</label>
-        <input id="h-price" type="number" value="90" />
-        <label>Stok</label>
-        <input id="h-stock" type="number" value="12" />
+        <div class="grid2">
+          <div><label>Fiyat ₺</label><input id="h-price" type="number" value="90" /></div>
+          <div><label>Stok</label><input id="h-stock" type="number" value="12" /></div>
+        </div>
         <label>Kategori</label>
-        <select id="h-cat">
-          <option>Meyve</option><option>Sebze</option><option>Yeşillik</option><option>Baklagil</option>
-        </select>
-        <button class="btn" onclick="publishHarvest()">Tezgaha koy</button>
+        <select id="h-cat"><option>Meyve</option><option>Sebze</option><option>Yeşillik</option><option>Baklagil</option></select>
+        <button class="btn" type="button" onclick="publishHarvest()">Tezgaha koy</button>
         <div id="h-msg"></div>
         <h3>NFC teslim</h3>
         <label>Sipariş id</label>
         <input id="nfc-order" placeholder="gp…" />
-        <label>NFC sır (ödeme ekranından)</label>
+        <label>NFC sır</label>
         <input id="nfc-secret" />
-        <button class="btn dark" onclick="nfcTap()">Dokun ve doğrula</button>
+        <button class="btn btn-g" type="button" onclick="nfcTap()">Dokun ve doğrula</button>
         <div id="nfc-msg"></div>
       </section>
-
-      <section id="screen-more" data-screen class="hidden">
-        <h2>Siparişler ve etki</h2>
+      <section class="page" id="screen-more" data-screen>
+        <p class="kicker">Defter</p>
+        <h2>Sipariş ve etki</h2>
         <div class="statgrid">
-          <div class="stat"><span>Stopaj kayıtsız</span><b>%2</b></div>
-          <div class="stat"><span>Vegan kilit</span><b>%100</b></div>
-          <div class="stat"><span>Çit</span><b>300 m</b></div>
-          <div class="stat"><span>Karbon</span><b>0.12 kg/km</b></div>
+          <div class="card stat pad"><span class="kicker">Stopaj</span><b>%2</b></div>
+          <div class="card stat pad"><span class="kicker">Vegan</span><b>%100</b></div>
+          <div class="card stat pad"><span class="kicker">Çit</span><b>300 m</b></div>
+          <div class="card stat pad"><span class="kicker">Karbon</span><b>0.12 kg/km</b></div>
         </div>
         <div id="order-list"></div>
-        <button class="btn ghost" onclick="resetDemo()">Demoyu sıfırla</button>
-        <p class="meta">Tahsin Sakin · GreenPick · Belvia köküne dokunulmadı.</p>
+        <button class="btn btn-g" type="button" onclick="resetDemo()">Demoyu sıfırla</button>
+        <p class="muted">Tahsin Sakin · GreenPick. Belvia köküne dokunulmadı.</p>
       </section>
-    </main>
-    <nav class="tabs">
-      <button data-go="screen-home" class="on">Pazar</button>
-      <button data-go="screen-map">Harita</button>
-      <button data-go="screen-buy">Öde</button>
-      <button data-go="screen-farm">Çiftlik</button>
-      <button data-go="screen-more">Sipariş</button>
+    </div>
+    <nav class="dock" id="dock">
+      <button data-go="screen-home" class="on" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>Pazar</button>
+      <button data-go="screen-map" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l6-3 6 3 4-2v15l-4 2-6-3-6 3V7z"/></svg>Harita</button>
+      <button data-go="screen-buy" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16l-1.5 11H5.5L4 7z"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>Kasa</button>
+      <button data-go="screen-farm" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M7 8c3 2 7 2 10 0M6 14c4 3 8 3 12 0"/></svg>Çiftlik</button>
+      <button data-go="screen-more" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Defter</button>
     </nav>
   </div>
-  <script src="./app.js"></script>
+  <script src="./app.js?v=sign2"></script>
+  <script>
+    (function () {
+      const c = document.getElementById("dither");
+      if (!c) return;
+      const N = [0x1e, 0x3a, 0x5f], K = [0x2a, 0x4e, 0x3a];
+      const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+      function paint() {
+        const cell = 6;
+        const W = innerWidth || 430, H = innerHeight || 800;
+        const w = Math.max(1, Math.ceil(W / cell)), h = Math.max(1, Math.ceil(H / cell));
+        c.width = w; c.height = h;
+        c.style.width = W + "px"; c.style.height = H + "px";
+        const ctx = c.getContext("2d");
+        const img = ctx.createImageData(w, h); const p = img.data;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const i = (y * w + x) * 4;
+            const n = ((x * 13 + y * 7) % 17) / 17;
+            const t = 0.78 + (B[y & 3][x & 3] / 16 - 0.5) * 0.12;
+            const col = n > t ? K : N;
+            p[i] = col[0]; p[i + 1] = col[1]; p[i + 2] = col[2]; p[i + 3] = 255;
+          }
+        }
+        ctx.putImageData(img, 0, 0);
+      }
+      paint();
+      addEventListener("resize", paint);
+    })();
+  </script>
 </body>
 </html>
