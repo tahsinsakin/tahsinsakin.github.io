@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./styles.css?v=eu4" />
-  <title>GreenPick · AB Farm to Fork</title>
+  <link rel="stylesheet" href="./styles.css?v=eu5" />
+  <title>GreenPick · European Union Farm to Fork</title>
 </head>
 <body>
   <div id="grain" aria-hidden="true"></div>
@@ -34,127 +34,129 @@
         </svg>
       </div>
       <div class="mast-copy">
-        <p class="eu-line">Avrupa Birliği · European Union</p>
+        <p class="eu-line">European Union · Farm to Fork Strategy</p>
         <h1>GreenPick</h1>
-        <p class="tag">Farm to Fork · <span id="role-label">Alıcı</span></p>
+        <p class="tag">Directorate-General for Agriculture · <span id="role-label">Buyer</span></p>
       </div>
+      <div class="starbar" aria-hidden="true"></div>
     </header>
     <div class="pager" id="pager">
       <section class="page" id="screen-home">
-        <p class="kicker">Pazar</p>
-        <h2>Hasat tezgahı</h2>
-        <p class="lede">Konum, ödeme sonrası açılır. Ürünler AB Farm to Fork ve organik tarım çerçevesinde işaretlenir.</p>
+        <p class="kicker">Market</p>
+        <h2>Harvest stall</h2>
+        <p class="lede">Exact GPS unlocks after payment. Lots carry European Union Farm to Fork and organic marks.</p>
+        <div class="cite">Reg. (EU) 2018/848 · COM(2020) 381 final · European Green Deal</div>
         <div class="pills">
-          <span class="pill gold">AB organiğı</span>
-          <span class="pill">%100 vegan</span>
-          <span class="pill">300 m çit</span>
+          <span class="pill gold">EU organic</span>
+          <span class="pill">100% vegan</span>
+          <span class="pill">300 m geofence</span>
         </div>
         <div class="split">
-          <button type="button" class="btn" data-act="role" data-role="CUSTOMER" id="role-c">Alıcıyım</button>
-          <button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">Çiftçiyim</button>
+          <button type="button" class="btn" data-act="role" data-role="CUSTOMER" id="role-c">I am a buyer</button>
+          <button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">I am a grower</button>
         </div>
-        <p class="hint">Safari → Paylaş → Ana Ekrana Ekle</p>
+        <p class="hint">Safari → Share → Add to Home Screen</p>
         <div class="seals">
           <div class="seal">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#003399"/><circle cx="32" cy="32" r="22" fill="none" stroke="#FFCC00" stroke-width="1.6"/><text x="32" y="28" text-anchor="middle" fill="#FFCC00" font-size="7" font-family="Outfit,sans-serif">EU</text><text x="32" y="38" text-anchor="middle" fill="#F4EFE4" font-size="6" font-family="Outfit,sans-serif">F2F</text></svg>
+            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#003399"/><circle cx="32" cy="32" r="22" fill="none" stroke="#FFCC00" stroke-width="1.6"/><text x="32" y="28" text-anchor="middle" fill="#FFCC00" font-size="8" font-family="Outfit,sans-serif">EU</text><text x="32" y="39" text-anchor="middle" fill="#F4EFE4" font-size="6" font-family="Outfit,sans-serif">F2F</text></svg>
             <span>Farm to Fork</span>
           </div>
           <div class="seal">
             <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#1B7A4E"/><path d="M32 16c14 9 22 24 18 36-9-3-16-11-18-20-2 9-9 17-18 20-4-12 4-27 18-36z" fill="#FFCC00"/></svg>
-            <span>Organik 2018/848</span>
+            <span>Organic 2018/848</span>
           </div>
           <div class="seal">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#0B1C33"/><text x="32" y="37" text-anchor="middle" fill="#FFCC00" font-size="11" font-family="Outfit,sans-serif" font-weight="700">GD</text></svg>
+            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#0B1C33"/><text x="32" y="28" text-anchor="middle" fill="#FFCC00" font-size="8" font-family="Outfit,sans-serif">EU</text><text x="32" y="39" text-anchor="middle" fill="#F4EFE4" font-size="6" font-family="Outfit,sans-serif">GD</text></svg>
             <span>Green Deal</span>
           </div>
         </div>
-        <h3>Bugünkü kasa</h3>
+        <h3>Today’s stall</h3>
         <div id="market-list" class="stack"></div>
       </section>
       <section class="page" id="screen-map">
-        <p class="kicker">Harita</p>
-        <h2>Yakın çiftlik</h2>
-        <p class="lede">Tam GPS kilitli. İğneler kaydırılmış. 300 m çitte bildirim düşer.</p>
-        <div class="mapbox"><iframe id="map-frame" title="harita" loading="lazy"></iframe></div>
-        <button type="button" class="btn" data-act="gps">Konumumu kullan</button>
-        <button type="button" class="btn ghost" data-act="near">Tezgahın yanındayım</button>
-        <button type="button" class="btn ghost" data-act="push">Bildirim izni</button>
+        <p class="kicker">Map</p>
+        <h2>Nearby holdings</h2>
+        <p class="lede">Full GPS stays locked. Pins are offset. A 300 m fence can notify you of a ready lot.</p>
+        <div class="mapbox"><iframe id="map-frame" title="map" loading="lazy"></iframe></div>
+        <button type="button" class="btn" data-act="gps">Use my location</button>
+        <button type="button" class="btn ghost" data-act="near">I am at the stall</button>
+        <button type="button" class="btn ghost" data-act="push">Allow notifications</button>
         <div id="geo-msg"></div>
-        <h3>Çiftlikler</h3>
+        <h3>Holdings</h3>
         <div id="farm-cards" class="stack"></div>
-        <h3>Bildirimler</h3>
+        <h3>Notices</h3>
         <div id="notif-list" class="stack"></div>
       </section>
       <section class="page" id="screen-buy">
-        <p class="kicker">Kasa</p>
-        <h2 id="buy-title">Ödeme</h2>
-        <p class="lede" id="buy-farm">Tezgâhtan bir ürün seç. Fiş kesilmeden konum açılmaz.</p>
+        <p class="kicker">Till</p>
+        <h2 id="buy-title">Settlement</h2>
+        <p class="lede" id="buy-farm">Choose a lot at the stall. Location does not open until the receipt is cut.</p>
         <input type="hidden" id="buy-pid" />
         <div id="buy-form" class="hidden">
-          <label for="buy-qty">Adet</label>
+          <label for="buy-qty">Quantity</label>
           <input id="buy-qty" type="number" min="1" value="1" inputmode="numeric" />
-          <label for="buy-km">Mesafe km</label>
+          <label for="buy-km">Distance km</label>
           <input id="buy-km" type="number" min="0.2" step="0.1" value="6" inputmode="decimal" />
           <div id="quote-box"></div>
-          <label for="buy-pan">Kart · son hane 3 red</label>
+          <label for="buy-pan">Card · last digit 3 is declined</label>
           <input id="buy-pan" inputmode="numeric" value="4242424242424242" autocomplete="off" />
-          <button type="button" class="btn" data-act="pay">Öde, konumu aç</button>
+          <button type="button" class="btn" data-act="pay">Pay and unlock location</button>
         </div>
-        <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">Tezgaha dön</button>
+        <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">Return to stall</button>
         <div id="buy-msg"></div>
       </section>
       <section class="page" id="screen-farm">
-        <p class="kicker">Çiftlik</p>
-        <h2>Hasat yükle</h2>
-        <p class="lede">Kamera ile fotoğraf. Teslim, AB izlenebilirlik fişi + NFC sır ile kapanır.</p>
-        <img id="h-preview" class="photo hidden" alt="hasat" />
-        <label>Fotoğraf</label>
+        <p class="kicker">Holding</p>
+        <h2>Lodge a harvest</h2>
+        <p class="lede">Camera capture for the lot photo. Handover closes with an EU traceability slip and NFC secret.</p>
+        <img id="h-preview" class="photo hidden" alt="harvest" />
+        <label>Photograph</label>
         <input id="h-file" type="file" accept="image/*" capture="environment" />
-        <label for="h-name">Ürün adı</label>
-        <input id="h-name" value="Sabah hasadı çilek" />
-        <label for="h-desc">Açıklama</label>
-        <textarea id="h-desc">Bugün kesildi. Soğuk zincir yok.</textarea>
+        <label for="h-name">Lot name</label>
+        <input id="h-name" value="Morning-picked strawberries" />
+        <label for="h-desc">Description</label>
+        <textarea id="h-desc">Cut today. No cold chain.</textarea>
         <div class="split">
           <div>
-            <label for="h-price">Fiyat ₺</label>
-            <input id="h-price" type="number" value="90" inputmode="decimal" />
+            <label for="h-price">Price €</label>
+            <input id="h-price" type="number" value="9" inputmode="decimal" />
           </div>
           <div>
-            <label for="h-stock">Stok</label>
+            <label for="h-stock">Stock</label>
             <input id="h-stock" type="number" value="12" inputmode="numeric" />
           </div>
         </div>
-        <label for="h-cat">Kategori</label>
+        <label for="h-cat">Category</label>
         <select id="h-cat">
-          <option>Meyve</option>
-          <option>Sebze</option>
-          <option>Yeşillik</option>
-          <option>Baklagil</option>
+          <option>Fruit</option>
+          <option>Vegetable</option>
+          <option>Greens</option>
+          <option>Pulses</option>
         </select>
-        <label for="h-eu">AB işareti</label>
+        <label for="h-eu">EU mark</label>
         <select id="h-eu">
-          <option value="organic">AB organiğı (2018/848)</option>
+          <option value="organic">EU organic (2018/848)</option>
           <option value="f2f">Farm to Fork</option>
-          <option value="local">Kısa zincir / yerel</option>
+          <option value="local">Short food supply chain</option>
         </select>
-        <button type="button" class="btn" data-act="publish">Tezgaha koy</button>
+        <button type="button" class="btn" data-act="publish">Place on stall</button>
         <div id="h-msg"></div>
-        <h3>NFC teslim</h3>
-        <label for="nfc-order">Sipariş id</label>
+        <h3>NFC handover</h3>
+        <label for="nfc-order">Order id</label>
         <input id="nfc-order" placeholder="gp…" />
-        <label for="nfc-secret">NFC sır</label>
+        <label for="nfc-secret">NFC secret</label>
         <input id="nfc-secret" />
-        <button type="button" class="btn ghost" data-act="nfc">Dokun ve doğrula</button>
+        <button type="button" class="btn ghost" data-act="nfc">Tap and verify</button>
         <div id="nfc-msg"></div>
       </section>
       <section class="page" id="screen-more">
-        <p class="kicker">Defter</p>
-        <h2>Sipariş ve AB etki</h2>
-        <p class="lede">Avrupa Birliği Green Deal ve Farm to Fork stratejisi: kısa mesafe, vegan kilit, şeffaf stopaj.</p>
+        <p class="kicker">Dossier</p>
+        <h2>Orders and EU impact</h2>
+        <p class="lede">European Green Deal and Farm to Fork: short distance, vegan lock, transparent withholding.</p>
         <div class="statgrid">
-          <div class="stat"><span>Stopaj</span><b>%2</b></div>
-          <div class="stat"><span>Vegan</span><b>%100</b></div>
-          <div class="stat"><span>Çit</span><b>300 m</b></div>
+          <div class="stat"><span>Withholding</span><b>2%</b></div>
+          <div class="stat"><span>Vegan</span><b>100%</b></div>
+          <div class="stat"><span>Fence</span><b>300 m</b></div>
           <div class="stat"><span>CO₂</span><b>0.12</b></div>
         </div>
         <div class="eu-card">
@@ -170,39 +172,40 @@
             </g></svg>
           </div>
           <div>
-            <strong>Avrupa Birliği</strong>
-            <p>Farm to Fork Strategy · European Green Deal · Organik tarım tüzüğü (AB) 2018/848 · Kısa gıda zinciri</p>
+            <strong>European Union</strong>
+            <p>Farm to Fork Strategy · European Green Deal · Organic farming regulation (EU) 2018/848 · Short food supply chain</p>
           </div>
         </div>
-        <h3>Sipariş fişleri</h3>
+        <div class="cite">Official Journal alignment · From farm to fork, not warehouse to aisle.</div>
+        <h3>Receipts</h3>
         <div id="order-list" class="stack"></div>
-        <button type="button" class="btn ghost" data-act="reset">Demoyu sıfırla</button>
-        <p class="colophon">Tahsin Sakin · GreenPick · Avrupa Birliği Farm to Fork</p>
+        <button type="button" class="btn ghost" data-act="reset">Reset demo</button>
+        <p class="colophon">GreenPick · European Union Farm to Fork</p>
       </section>
     </div>
     <nav class="rail" id="dock">
       <button type="button" data-go="screen-home" class="on">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>
-        Pazar
+        Market
       </button>
       <button type="button" data-go="screen-map">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l6-3 6 3 4-2v15l-4 2-6-3-6 3V7z"/></svg>
-        Harita
+        Map
       </button>
       <button type="button" data-go="screen-buy">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16l-1.5 11H5.5L4 7z"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>
-        Kasa
+        Till
       </button>
       <button type="button" data-go="screen-farm">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M7 8c3 2 7 2 10 0M6 14c4 3 8 3 12 0"/></svg>
-        Çiftlik
+        Holding
       </button>
       <button type="button" data-go="screen-more">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
-        Defter
+        Dossier
       </button>
     </nav>
   </div>
-  <script src="./app.js?v=eu4"></script>
+  <script src="./app.js?v=eu5"></script>
 </body>
 </html>
