@@ -49,15 +49,20 @@ async function shaHex(text) {
 }
 const $ = (id) => document.getElementById(id);
 function show(id) {
-  document.querySelectorAll("[data-screen]").forEach((el) => el.classList.add("hidden"));
-  $(id).classList.remove("hidden");
-  document.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.go === id));
-  window.scrollTo(0, 0);
+  const page = $(id);
+  const pager = $("pager");
+  if (page && pager) {
+    pager.scrollTo({ left: page.offsetLeft, behavior: "smooth" });
+    page.scrollTop = 0;
+  }
+  document.querySelectorAll(".dock button, .tabs button").forEach((b) => {
+    b.classList.toggle("on", b.dataset.go === id);
+  });
 }
 function renderMarket() {
   $("market-list").innerHTML = S.products.filter((p) => p.stock > 0).map((p) => {
     const f = farmById(p.farmId);
-    return '<article class="card"><span class="pill">vegan · ' + p.cat + '</span><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(p.price) + '</span></div><p class="meta">' + f.name + ' · stok ' + p.stock + '</p><p class="meta">' + p.desc + '</p><button class="btn" onclick="openBuy(\'' + p.id + '\')">Al ve konumu aç</button></article>';
+    return '<article class="card pad"><span class="kicker">vegan · ' + p.cat + '</span><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(p.price) + '</span></div><p class="meta">' + f.name + ' · stok ' + p.stock + '</p><p class="meta">' + p.desc + '</p><button class="btn" onclick="openBuy(\'' + p.id + '\')">Al ve konumu aç</button></article>';
   }).join("");
 }
 function renderMap(origin) {
@@ -66,7 +71,7 @@ function renderMap(origin) {
   $("farm-cards").innerHTML = FARMS.map((f) => {
     const d = haversine(o.lat, o.lng, f.lat, f.lng) / 1000;
     const j = jitter(f);
-    return '<article class="card"><div class="row"><strong>' + f.name + '</strong><span class="meta">≈ ' + d.toFixed(1) + ' km</span></div><p class="lock">Tam GPS kilitli (' + j.lat.toFixed(3) + ', ' + j.lng.toFixed(3) + ' kaydırılmış). Ödeme sonrası açılır.</p><p class="meta">' + S.products.filter((p) => p.farmId === f.id && p.stock > 0).length + ' ürün</p></article>';
+    return '<article class="card pad"><div class="row"><strong>' + f.name + '</strong><span class="meta">≈ ' + d.toFixed(1) + ' km</span></div><p class="lock">Tam GPS kilitli (' + j.lat.toFixed(3) + ', ' + j.lng.toFixed(3) + ' kaydırılmış). Ödeme sonrası açılır.</p><p class="meta">' + S.products.filter((p) => p.farmId === f.id && p.stock > 0).length + ' ürün</p></article>';
   }).join("");
 }
 window.openBuy = function (pid) {
@@ -88,7 +93,7 @@ window.quoteBuy = function () {
   const tax = stopaj(f, base);
   const km = Number($("buy-km").value || 12);
   const co2 = carbonKg(km);
-  $("quote-box").innerHTML = '<div class="statgrid"><div class="stat"><span>Tutar</span><b>' + money(base) + '</b></div><div class="stat"><span>Stopaj</span><b>' + money(tax.tax) + '</b></div><div class="stat"><span>Çiftçi net</span><b>' + money(tax.net) + '</b></div><div class="stat"><span>Karbon</span><b>' + co2 + ' kg</b></div></div>';
+  $("quote-box").innerHTML = '<div class="statgrid"><div class="card stat pad"><span class="kicker">Tutar</span><b>' + money(base) + '</b></div><div class="card stat pad"><span class="kicker">Stopaj</span><b>' + money(tax.tax) + '</b></div><div class="card stat pad"><span class="kicker">Çiftçi net</span><b>' + money(tax.net) + '</b></div><div class="card stat pad"><span class="kicker">Karbon</span><b>' + co2 + ' kg</b></div></div>';
 };
 window.payNow = async function () {
   const p = productById($("buy-pid").value);
@@ -111,12 +116,12 @@ window.payNow = async function () {
   renderOrders();
 };
 function renderOrders() {
-  if (!S.orders.length) { $("order-list").innerHTML = '<div class="card meta">Henüz sipariş yok.</div>'; return; }
+  if (!S.orders.length) { $("order-list").innerHTML = '<div class="card pad meta">Henüz sipariş yok.</div>'; return; }
   $("order-list").innerHTML = S.orders.map((o) => {
     const p = productById(o.productId) || { name: "ürün" };
     const f = farmById(o.farmId);
     const loc = o.unlocked ? (f.lat.toFixed(5) + ', ' + f.lng.toFixed(5) + ' · ' + f.phone) : 'konum kilitli';
-    return '<article class="card"><span class="pill">' + o.status + '</span><div class="row"><strong>' + p.name + '</strong><span>' + money(o.base) + '</span></div><p class="meta">stopaj ' + money(o.tax) + ' · net ' + money(o.net) + '</p><p class="meta">karbon ' + o.carbon + ' kg · ' + o.km + ' km</p><p class="meta">' + loc + '</p><p class="meta">NFC: ' + o.nfcSecret + '</p></article>';
+    return '<article class="card pad"><span class="kicker">' + o.status + '</span><div class="row"><strong>' + p.name + '</strong><span class="price">' + money(o.base) + '</span></div><p class="meta">stopaj ' + money(o.tax) + ' · net ' + money(o.net) + '</p><p class="meta">karbon ' + o.carbon + ' kg · ' + o.km + ' km</p><p class="meta">' + loc + '</p><p class="meta">NFC: ' + o.nfcSecret + '</p></article>';
   }).join("");
 }
 window.useGps = function () {
@@ -155,7 +160,7 @@ function scanFence(o) {
   }
 }
 function renderNotifs() {
-  $("notif-list").innerHTML = S.notifs.slice(0, 8).map((n) => '<div class="card"><strong>' + n.title + '</strong><p class="meta">' + n.body + '</p></div>').join("") || '<p class="meta">Bildirim yok.</p>';
+  $("notif-list").innerHTML = S.notifs.slice(0, 8).map((n) => '<div class="card pad"><strong>' + n.title + '</strong><p class="meta">' + n.body + '</p></div>').join("") || '<p class="meta">Bildirim yok.</p>';
 }
 window.askPush = function () { if ("Notification" in window) Notification.requestPermission(); };
 window.setRole = function (role) { S.role = role; save(); $("role-label").textContent = role === "FARMER" ? "Çiftçi" : "Alıcı"; };
@@ -194,6 +199,16 @@ function boot() {
   if (S.harvestPhoto) { $("h-preview").src = S.harvestPhoto; $("h-preview").classList.remove("hidden"); }
   show("screen-home");
 }
-document.querySelectorAll(".tabs button").forEach((b) => { b.addEventListener("click", function () { show(b.dataset.go); }); });
+document.querySelectorAll(".dock button, .tabs button").forEach((b) => { b.addEventListener("click", function () { show(b.dataset.go); }); });
+var pagerEl = document.getElementById("pager");
+if (pagerEl) {
+  pagerEl.addEventListener("scroll", function () {
+    var pages = [].slice.call(pagerEl.querySelectorAll(".page"));
+    var i = Math.round(pagerEl.scrollLeft / Math.max(pagerEl.clientWidth, 1));
+    var id = pages[i] && pages[i].id;
+    if (!id) return;
+    document.querySelectorAll(".dock button").forEach(function (b) { b.classList.toggle("on", b.dataset.go === id); });
+  }, { passive: true });
+}
 if ("serviceWorker" in navigator) { navigator.serviceWorker.register("./sw.js"); }
 boot();
