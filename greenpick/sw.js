@@ -1,4 +1,4 @@
-const CACHE = "greenpick-iphone-v4";
+const CACHE = "greenpick-iphone-v5";
 const ASSETS = ["./","./index.html","./styles.css","./app.js","./manifest.webmanifest","./icon.svg"];
 
 self.addEventListener("install", (e) => {
@@ -12,7 +12,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   const url = new URL(e.request.url);
-  const live = /index\\.html|styles\\.css|app\\.js|manifest/.test(url.pathname) || url.pathname.endsWith("/greenpick/") || url.pathname.endsWith("/greenpick");
+  const live = /index\.html|styles\.css|app\.js|manifest/.test(url.pathname) || url.pathname.endsWith("/greenpick/") || url.pathname.endsWith("/greenpick");
   if (live) {
     e.respondWith(
       fetch(e.request).then((res) => {

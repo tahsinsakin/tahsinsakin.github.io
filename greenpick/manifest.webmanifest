@@ -1,13 +1,14 @@
 {
   "name": "GreenPick",
   "short_name": "GreenPick",
-  "description": "Avrupa Birliği Farm to Fork — çiftçiden kente vegan pazar",
+  "description": "European Union Farm to Fork — vegan harvest, farm to city",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#003399",
   "theme_color": "#003399",
+  "lang": "en",
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
