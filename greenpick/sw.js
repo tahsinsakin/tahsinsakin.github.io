@@ -1,4 +1,4 @@
-const CACHE = "greenpick-iphone-v1";
+const CACHE = "greenpick-iphone-v2";
 const ASSETS = ["./","index.html","styles.css","app.js","manifest.webmanifest","icon.svg"];
 
 self.addEventListener("install", (e) => {
