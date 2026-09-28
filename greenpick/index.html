@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="./styles.css?v=eu5" />
+  <link rel="stylesheet" href="./styles.css?v=eu7" />
   <title>GreenPick · European Union Farm to Fork</title>
 </head>
 <body>
@@ -40,22 +40,31 @@
       </div>
       <div class="starbar" aria-hidden="true"></div>
     </header>
+
     <div class="pager" id="pager">
       <section class="page" id="screen-home">
-        <p class="kicker">Market</p>
+        <figure class="hero tall">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1400&q=75" alt="European holding at sunrise" />
+          <figcaption class="cap">Holding at first light · Farm to Fork plate 01</figcaption>
+        </figure>
+
+        <p class="kicker">Official Journal · Market</p>
         <h2>Harvest stall</h2>
-        <p class="lede">Exact GPS unlocks after payment. Lots carry European Union Farm to Fork and organic marks.</p>
-        <div class="cite">Reg. (EU) 2018/848 · COM(2020) 381 final · European Green Deal</div>
+        <p class="lede">Exact GPS unlocks after payment. Every lot carries a Farm to Fork mark, an organic citation, or a short-supply-chain stamp.</p>
+        <div class="cite">Reg. (EU) 2018/848 · COM(2020) 381 final · European Green Deal · From farm to fork, not warehouse to aisle.</div>
+
         <div class="pills">
           <span class="pill gold">EU organic</span>
           <span class="pill">100% vegan</span>
           <span class="pill">300 m geofence</span>
+          <span class="pill">Euro till</span>
         </div>
         <div class="split">
           <button type="button" class="btn" data-act="role" data-role="CUSTOMER" id="role-c">I am a buyer</button>
           <button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">I am a grower</button>
         </div>
         <p class="hint">Safari → Share → Add to Home Screen</p>
+
         <div class="seals">
           <div class="seal">
             <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#003399"/><circle cx="32" cy="32" r="22" fill="none" stroke="#FFCC00" stroke-width="1.6"/><text x="32" y="28" text-anchor="middle" fill="#FFCC00" font-size="8" font-family="Outfit,sans-serif">EU</text><text x="32" y="39" text-anchor="middle" fill="#F4EFE4" font-size="6" font-family="Outfit,sans-serif">F2F</text></svg>
@@ -70,13 +79,39 @@
             <span>Green Deal</span>
           </div>
         </div>
+
+        <h3>Field plates</h3>
+        <div class="film" aria-label="Harvest filmstrip">
+          <figure><img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=700&q=70" alt="Strawberries" /><figcaption>Strawberry crate</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1546470427-e26264be0b2b?auto=format&fit=crop&w=700&q=70" alt="Tomatoes" /><figcaption>Pink-row tomato</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=700&q=70" alt="Greens" /><figcaption>Cut greens</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=700&q=70" alt="Pulses" /><figcaption>Dry beans</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1607305387299-8b4a0878b2db?auto=format&fit=crop&w=700&q=70" alt="Parsley" /><figcaption>Daily parsley</figcaption></figure>
+          <figure><img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=700&q=70" alt="Stall" /><figcaption>City stall</figcaption></figure>
+        </div>
+
+        <div class="gallery gallery-6">
+          <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=700&q=70" alt="Holding rows" />
+          <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=700&q=70" alt="Pasture light" />
+          <img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=700&q=70" alt="Market fruit" />
+          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=700&q=70" alt="Seedlings" />
+          <img src="https://images.unsplash.com/photo-1461354465290-bddaded76994?auto=format&fit=crop&w=700&q=70" alt="Harvest crate" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/640px-Flag_of_Europe.svg.png" alt="European Union flag" />
+        </div>
+
         <h3>Today’s stall</h3>
         <div id="market-list" class="stack"></div>
       </section>
+
       <section class="page" id="screen-map">
+        <figure class="hero">
+          <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1400&q=75" alt="Nearby holdings" />
+          <figcaption class="cap">Holdings · pins stay offset until the till</figcaption>
+        </figure>
         <p class="kicker">Map</p>
         <h2>Nearby holdings</h2>
         <p class="lede">Full GPS stays locked. Pins are offset. A 300 m fence can notify you of a ready lot.</p>
+        <div class="cite">Geofence 300 m · jittered public pin · exact address after settlement</div>
         <div class="mapbox"><iframe id="map-frame" title="map" loading="lazy"></iframe></div>
         <button type="button" class="btn" data-act="gps">Use my location</button>
         <button type="button" class="btn ghost" data-act="near">I am at the stall</button>
@@ -87,7 +122,12 @@
         <h3>Notices</h3>
         <div id="notif-list" class="stack"></div>
       </section>
+
       <section class="page" id="screen-buy">
+        <figure class="hero" id="buy-hero-wrap">
+          <img id="buy-hero" src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1400&q=75" alt="Lot photograph" />
+          <figcaption class="cap" id="buy-cap">Till · location sealed until the receipt</figcaption>
+        </figure>
         <p class="kicker">Till</p>
         <h2 id="buy-title">Settlement</h2>
         <p class="lede" id="buy-farm">Choose a lot at the stall. Location does not open until the receipt is cut.</p>
@@ -105,7 +145,12 @@
         <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">Return to stall</button>
         <div id="buy-msg"></div>
       </section>
+
       <section class="page" id="screen-farm">
+        <figure class="hero">
+          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1400&q=75" alt="Lodge a harvest" />
+          <figcaption class="cap">Holding desk · camera plate + NFC secret</figcaption>
+        </figure>
         <p class="kicker">Holding</p>
         <h2>Lodge a harvest</h2>
         <p class="lede">Camera capture for the lot photo. Handover closes with an EU traceability slip and NFC secret.</p>
@@ -149,8 +194,14 @@
         <button type="button" class="btn ghost" data-act="nfc">Tap and verify</button>
         <div id="nfc-msg"></div>
       </section>
+
       <section class="page" id="screen-more">
         <p class="kicker">Dossier</p>
+        <figure class="hero tall">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Flag_of_Europe.svg/1280px-Flag_of_Europe.svg.png" alt="Flag of the European Union" />
+          <figcaption class="cap">Circle of twelve stars · official colours</figcaption>
+        </figure>
+
         <h2>Orders and EU impact</h2>
         <p class="lede">European Green Deal and Farm to Fork: short distance, vegan lock, transparent withholding.</p>
         <div class="statgrid">
@@ -159,6 +210,16 @@
           <div class="stat"><span>Fence</span><b>300 m</b></div>
           <div class="stat"><span>CO₂</span><b>0.12</b></div>
         </div>
+
+        <div class="essay">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=70" alt="Sunrise holding" />
+          <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=800&q=70" alt="Strawberries" />
+          <img src="https://images.unsplash.com/photo-1546470427-e26264be0b2b?auto=format&fit=crop&w=800&q=70" alt="Tomatoes" />
+          <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=800&q=70" alt="Greens" />
+          <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=70" alt="City stall" />
+          <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=800&q=70" alt="Field rows" />
+        </div>
+
         <div class="eu-card">
           <div class="eu-card-flag" aria-hidden="true">
             <svg viewBox="0 0 72 48"><rect width="72" height="48" fill="#003399"/><g fill="#FFCC00" transform="translate(36 24) scale(.55)">
@@ -176,13 +237,14 @@
             <p>Farm to Fork Strategy · European Green Deal · Organic farming regulation (EU) 2018/848 · Short food supply chain</p>
           </div>
         </div>
-        <div class="cite">Official Journal alignment · From farm to fork, not warehouse to aisle.</div>
+        <div class="cite">Official Journal alignment · Photographs stand in for field inspection plates in this demo dossier.</div>
         <h3>Receipts</h3>
         <div id="order-list" class="stack"></div>
         <button type="button" class="btn ghost" data-act="reset">Reset demo</button>
         <p class="colophon">GreenPick · European Union Farm to Fork</p>
       </section>
     </div>
+
     <nav class="rail" id="dock">
       <button type="button" data-go="screen-home" class="on">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10l8-6 8 6v10H4z"/></svg>
@@ -206,6 +268,6 @@
       </button>
     </nav>
   </div>
-  <script src="./app.js?v=eu5"></script>
+  <script src="./app.js?v=eu7"></script>
 </body>
 </html>
