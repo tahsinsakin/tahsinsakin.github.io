@@ -69,8 +69,30 @@ textarea{min-height:72px}input:focus,select:focus,textarea:focus,button:focus-vi
 @media (hover:hover){.ref:hover{border-color:var(--leaf)}}
 .statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}.stat span{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}.stat b{display:block;margin-top:4px;font-family:var(--display);font-size:24px}
 .tabbar{display:grid;grid-template-columns:repeat(5,1fr);background:#FFFcf7;border-top:1px solid var(--line);padding:4px 4px calc(6px + var(--safe-b))}
-.tabbar button{border:0;background:none;color:var(--mute);min-height:54px;padding:6px 2px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:800}
-.tabbar svg{width:20px;height:20px}.tabbar button.on{color:var(--leaf)}.tabbar button:active{transform:scale(.96)}
+.tabbar button{border:0;background:none;color:var(--mute);min-height:54px;padding:6px 2px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:800;line-height:1}
+.tabbar svg{display:block;width:22px;height:22px;min-width:22px;min-height:22px;flex:0 0 22px}
+.tabbar button span{display:block;line-height:1.1}
+.tabbar button.on{color:var(--leaf)}.tabbar button:active{transform:scale(.96)}
+.who{display:flex;align-items:center;gap:14px;margin:0 0 4px;padding:16px;border-radius:var(--r);background:#1A2E1C;color:#F7F4EE}
+.who .eyebrow{margin:0;color:#A9C59A}
+.who-name{margin:2px 0 4px;font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.who .fine{margin:0;color:#C9D6C4}
+.avatar{width:56px;height:56px;flex:0 0 56px;border-radius:50%;background:#2F6B4F;display:grid;place-items:center}
+.avatar svg{display:block;width:28px;height:28px}
+.modegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:12px;min-height:96px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}
+.mode svg{display:block;width:22px;height:22px;flex:0 0 22px;margin-bottom:6px;color:var(--leaf)}
+.mode b{font-size:14px;font-weight:800}
+.mode span{font-size:12px;font-weight:600;color:var(--mute)}
+.mode.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.mode.on svg{color:#C5E1A5}
+.mode.on span{color:#C9D6C4}
+.mode:active{transform:scale(.98)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:4px 14px 14px}
+.sell{margin-top:4px;padding:4px 14px 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+html:not(.grower) .sell{display:none}
+html.grower #grower-hint{display:none}
+.lockline{margin:8px 0 0;font-size:12px;font-weight:700;color:var(--leaf)}
 .toast{position:absolute;left:16px;right:16px;top:calc(var(--safe-t) + 72px);z-index:6;background:var(--ink);color:#fff;border-radius:12px;padding:12px 14px;font-weight:700;box-shadow:var(--shadow)}
 html.simple{font-size:18px}html.simple .btn{min-height:54px}html.simple .tabbar button{min-height:58px;font-size:12px}
 @media (min-width:860px){body{background:#0E1811}#app{max-width:980px;grid-template-columns:220px 1fr;grid-template-rows:auto 1fr}.top{grid-column:1/-1}.tabbar{grid-column:1;grid-row:2;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 12px;border-top:0;border-right:1px solid var(--line)}.tabbar button{flex-direction:row;gap:10px;justify-content:flex-start;padding:12px;border-radius:12px;font-size:14px}.pager{grid-column:2}}

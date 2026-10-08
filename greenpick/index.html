@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="./icon.svg" />
   <link rel="icon" href="./icon.svg" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" />
-  <link rel="stylesheet" href="./styles.css?v=gp12" />
+  <link rel="stylesheet" href="./styles.css?v=gp16" />
   <title>GreenPick</title>
 </head>
 <body>
@@ -38,7 +38,15 @@
         <div class="rowhead"><h2>Fresh around you</h2><button type="button" class="textlink" data-act="go" data-go="screen-explore">See all</button></div>
         <div id="home-hero"></div>
         <div id="home-list" class="stack"></div>
-        <aside class="impact-strip"><p class="eyebrow">Ultra-short supply chain</p><div class="miles"><span>Farm</span><i></i><span id="miles-n">300 m</span><i></i><span>You</span></div><div class="mini"><div><b>Less distance</b><span>No warehouse hop</span></div><div><b>Less waste</b><span>Sold the same day</span></div><div><b>Direct pay</b><span>To the grower</span></div></div></aside>
+        <aside class="impact-strip">
+          <p class="eyebrow">Short chain · estimate</p>
+          <div class="miles"><span>Farm</span><i></i><span id="miles-n">—</span><i></i><span>You</span></div>
+          <div class="mini">
+            <div><b id="co2-n">0 kg</b><span>CO₂e avoided</span></div>
+            <div><b id="vegan-n">—</b><span>Plant-based share</span></div>
+            <div><b>300 m</b><span>Fence, no false ping</span></div>
+          </div>
+        </aside>
       </section>
       <section class="page" id="screen-explore">
         <h2>Explore</h2>
@@ -49,7 +57,7 @@
       </section>
       <section class="page" id="screen-map">
         <h2>Map</h2>
-        <p class="lede">Farms near you. Pins stay slightly offset until you pay.</p>
+        <p class="lede">Pins stay offset. Exact GPS and phone stay locked until payment succeeds.</p>
         <div class="mapwrap"><div class="mapbox"><iframe id="map-frame" title="Nearby farms" loading="lazy"></iframe></div><div class="pinrow" id="pinrow"></div></div>
         <div class="split2"><button type="button" class="btn" data-act="gps">Use my location</button><button type="button" class="btn ghost" data-act="near">I’m at a stall</button></div>
         <div id="geo-msg"></div>
@@ -58,16 +66,16 @@
       </section>
       <section class="page" id="screen-orders">
         <button type="button" class="btn ghost back" data-act="go" data-go="screen-home">Back to Home</button>
-        <figure class="hero" id="buy-hero-wrap"><img id="buy-hero" src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1200&q=70" width="1200" height="675" alt="" /><figcaption class="cap" id="buy-cap">Choose a harvest to buy</figcaption></figure>
+        <figure class="hero" id="buy-hero-wrap"><img id="buy-hero" src="./img/strawberries.jpg" width="1200" height="675" alt="" /><figcaption class="cap" id="buy-cap">Choose a harvest to buy</figcaption></figure>
         <h2 id="buy-title">Your order</h2>
-        <p class="lede" id="buy-farm">Tap See & buy on a card. The exact farm address opens after payment.</p>
+        <p class="lede" id="buy-farm">Tap See & buy. Exact farm coordinates open only after a successful payment.</p>
         <input type="hidden" id="buy-pid" />
         <div id="buy-form" class="hidden">
           <label for="buy-qty">Quantity (kg)</label><input id="buy-qty" type="number" min="1" value="1" inputmode="numeric" />
           <label for="buy-km">Your trip (km)</label><input id="buy-km" type="number" min="0.2" step="0.1" value="0.3" inputmode="decimal" />
           <div id="quote-box"></div>
           <label for="buy-pan">Card · last digit 3 is declined</label><input id="buy-pan" inputmode="numeric" value="4242424242424242" autocomplete="off" />
-          <button type="button" class="btn" data-act="pay">Pay and show farm location</button>
+          <button type="button" class="btn" data-act="pay">Pay and unlock location</button>
         </div>
         <button type="button" class="btn ghost" data-act="go" data-go="screen-home" id="buy-empty-go">Browse harvests</button>
         <div id="buy-msg"></div>
@@ -75,13 +83,33 @@
       </section>
       <section class="page" id="screen-profile">
         <h2>Profile</h2>
-        <div class="split2"><button type="button" class="btn ghost" data-act="role" data-role="CUSTOMER" id="role-c">I’m buying</button><button type="button" class="btn ghost" data-act="role" data-role="FARMER" id="role-f">I grow food</button></div>
-        <div class="split2"><button type="button" class="btn ghost" data-act="simple" id="btn-simple">Simple Mode</button><button type="button" class="btn ghost" data-act="vegan" id="btn-vegan">Plant-based</button></div>
-        <label for="radius-sel">Alert radius</label>
-        <select id="radius-sel"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="3000">3 km</option><option value="5000">5 km</option><option value="10000">10 km</option></select>
-        <button type="button" class="btn" data-act="push">Turn on harvest alerts</button>
-        <div id="alert-msg"></div>
-        <div class="sell">
+        <article class="who">
+          <span class="avatar" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5Z" fill="#F7F4EE"/></svg></span>
+          <div>
+            <p class="eyebrow" id="who-role">Buyer</p>
+            <p class="who-name" id="who-name">Guest</p>
+            <p class="fine" id="who-sub">Ankara · exact GPS stays locked until payment</p>
+          </div>
+        </article>
+        <h3>How you use GreenPick</h3>
+        <div class="modegrid">
+          <button type="button" class="mode" data-act="role" data-role="CUSTOMER" id="role-c"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h14l-1.4 8.2A3 3 0 0 1 16.6 15H9.2L7 4Zm0 0L5.4 2H2v2h2.2L8 17h10v-2H9.2" fill="currentColor"/></svg><b>I’m buying</b><span>Food near you</span></button>
+          <button type="button" class="mode" data-act="role" data-role="FARMER" id="role-f"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c5 3.2 8 8 7 13-3.2-1-5.6-3.4-6.4-6.6C11.8 12.6 9.4 15 6.2 16 5.2 11 8.2 6.2 12 3Z" fill="currentColor"/></svg><b>I grow food</b><span>List a harvest</span></button>
+          <button type="button" class="mode" data-act="simple" id="btn-simple"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4Zm2 5h12v2H6Zm3 5h6v2H9Z" fill="currentColor"/></svg><b>Simple Mode</b><span>Larger type</span></button>
+          <button type="button" class="mode" data-act="vegan" id="btn-vegan"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c6 4 9 10 8 16-4-1.4-7-4.6-8-8.6-1 4-4 7.2-8 8.6C3 13 6 7 12 3Z" fill="currentColor"/></svg><b>Plant-based</b><span>Hide eggs and honey</span></button>
+        </div>
+        <h3>Harvest alerts</h3>
+        <div class="panel">
+          <label for="radius-sel">List radius</label>
+          <select id="radius-sel"><option value="300">300 m fence</option><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="3000">3 km</option><option value="5000">5 km</option><option value="10000">10 km</option></select>
+          <p class="fine">This only changes the list. A ping still fires only inside 300 m.</p>
+          <button type="button" class="btn" data-act="push">Turn on harvest alerts</button>
+          <div id="alert-msg"></div>
+        </div>
+        <h3>This device</h3>
+        <div id="impact-grid" class="statgrid"></div>
+        <p class="fine">CO₂e is an estimate: assumed 8 km shop trip minus this trip, times 0.12 kg/km, plus 0.35 kg handling. Not a life-cycle study and not a zero-carbon certificate.</p>
+        <div class="sell" id="sell-panel">
           <h3>Sell what you grow</h3>
           <p class="lede">Photo, name, kilos, price. Publish. No warehouse required.</p>
           <img id="h-preview" class="photo hidden" alt="Harvest photograph" />
@@ -102,6 +130,7 @@
           <button type="button" class="btn ghost" data-act="nfc">Verify handover</button>
           <div id="nfc-msg"></div>
         </div>
+        <p class="fine grower-hint" id="grower-hint">Switch to I grow food to list a harvest and verify handover.</p>
         <h3>How the chain works</h3>
         <div class="chain"><div class="good"><b>GreenPick</b><span>Farm → nearby buyer</span></div><div><b>Typical long route</b><span>Farm → collector → warehouse → store → buyer</span></div></div>
         <h3>European food system</h3>
@@ -112,20 +141,17 @@
           <a class="ref" href="https://eur-lex.europa.eu/eli/reg/2018/848/oj" target="_blank" rel="noopener">EU Organic Regulation 2018/848</a>
           <a class="ref" href="https://agriculture.ec.europa.eu/common-agricultural-policy_en" target="_blank" rel="noopener">Common Agricultural Policy</a>
         </div>
-        <h3>This device</h3>
-        <div id="impact-grid" class="statgrid"></div>
-        <p class="fine">CO2e on receipts is an estimate only.</p>
         <button type="button" class="btn ghost" data-act="reset">Reset demo</button>
       </section>
     </div>
     <nav class="tabbar" id="dock" aria-label="Main">
-      <button type="button" data-go="screen-home" class="on">Home</button>
-      <button type="button" data-go="screen-explore">Explore</button>
-      <button type="button" data-go="screen-map">Map</button>
-      <button type="button" data-go="screen-orders">Orders</button>
-      <button type="button" data-go="screen-profile">Profile</button>
+      <button type="button" data-go="screen-home" class="on"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 11.5 12 4l8 7.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1Z"/></svg><span>Home</span></button>
+      <button type="button" data-go="screen-explore"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.2 16.2 20 20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span>Explore</span></button>
+      <button type="button" data-go="screen-map"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 22s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Zm0-9.5A2.5 2.5 0 1 1 14.5 10 2.5 2.5 0 0 1 12 12.5Z"/></svg><span>Map</span></button>
+      <button type="button" data-go="screen-orders"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4h14l-1.4 8.2A3 3 0 0 1 16.6 15H9.2L7 4Zm0 0L5.4 2H2v2h2.2L8 17h10v-2H9.2"/><circle cx="9" cy="20.5" r="1.4" fill="currentColor"/><circle cx="17" cy="20.5" r="1.4" fill="currentColor"/></svg><span>Orders</span></button>
+      <button type="button" data-go="screen-profile"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5Z"/></svg><span>Profile</span></button>
     </nav>
   </div>
-  <script src="./app.js?v=gp12"></script>
+  <script src="./app.js?v=gp16"></script>
 </body>
 </html>
