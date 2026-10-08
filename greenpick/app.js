@@ -408,5 +408,5 @@ if (pager) pager.addEventListener("scroll", () => {
   if (!id) return;
   document.querySelectorAll(".tabbar button").forEach((btn) => btn.classList.toggle("on", btn.getAttribute("data-go") === id));
 }, { passive: true });
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js?v=gp16").catch((err) => console.error("SW", err));
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js?v=gp17").catch((err) => console.error("SW", err));
 boot();

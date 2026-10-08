@@ -1,5 +1,25 @@
-const CACHE = "greenpick-iphone-v16";
-const ASSETS = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./icon.svg"];
+const CACHE = "greenpick-iphone-v17";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./manifest.webmanifest",
+  "./icon.svg",
+  "./img/strawberries.jpg",
+  "./img/strawberries-2.jpg",
+  "./img/tomatoes.jpg",
+  "./img/greens.jpg",
+  "./img/parsley.jpg",
+  "./img/beans.jpg",
+  "./img/leaf-plate.jpg",
+  "./img/stall-day.jpg",
+  "./img/stall-city.jpg",
+  "./img/farm-sunrise.jpg",
+  "./img/farm-anatolia.jpg",
+  "./img/eu-flag.jpg",
+  "./img/dossier-plate.jpg"
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -36,6 +56,6 @@ self.addEventListener("fetch", (event) => {
       const copy = res.clone();
       caches.open(CACHE).then((cache) => cache.put(event.request, copy));
       return res;
-    }).catch(() => caches.match("./index.html")))
+    }).catch(() => caches.match(event.request)))
   );
 });
